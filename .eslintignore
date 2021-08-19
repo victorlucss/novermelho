@@ -1,0 +1,16 @@
+.eslintrc.js
+*.config.js
+*.md
+*.css
+*.scss
+*.svg
+# Next.js
+/.next/
+/out/
+
+# Editor files
+.vscode/
+.idea/
+
+# Yarn
+yarn-error.log

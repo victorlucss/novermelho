@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
+import { Box } from '@chakra-ui/react';
 
-import FormSignUp from '@Modules/Authentication/container/FormSignUp'
-import { Box } from '@chakra-ui/react'
+import FormSignUp from '@Modules/Authentication/container/FormSignUp';
 
 export default function Home() {
   const router = useRouter();
@@ -10,5 +10,5 @@ export default function Home() {
     <Box margin="10">
       <FormSignUp />
     </Box>
-  )
+  );
 }

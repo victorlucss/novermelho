@@ -1,17 +1,17 @@
-import { useRouter } from "next/router";
-import { useUser } from "@Modules/Authentication/context/UserContext"
+import { useRouter } from 'next/router';
 
-const withAuth = (WrappedComponent) => {
-  
-  return (props) => {
-    if (typeof window !== "undefined") {
+import { useUser } from '@Modules/Authentication/context/UserContext';
+
+const withAuth = WrappedComponent => {
+  return props => {
+    if (typeof window !== 'undefined') {
       const Router = useRouter();
-      const { userId } = useUser()
+      const { userId } = useUser();
 
       console.log(userId);
 
       if (!userId) {
-        Router.replace("/login");
+        Router.replace('/login');
         return null;
       }
 

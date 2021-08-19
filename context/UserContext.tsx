@@ -1,28 +1,27 @@
 import React, { createContext, useContext } from 'react';
 
 interface whateverContextInterface {
-  authUser?: Object | null,
-  loading: boolean
+  authUser?: Object | null;
+  loading: boolean;
 }
 
 const WhateverContext = createContext({} as whateverContextInterface);
 
 interface WhateverProviderProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export const WhateverProvider = ({ children }: WhateverProviderProps) => {
   return (
-    <WhateverContext.Provider value={
-      {
+    <WhateverContext.Provider
+      value={{
         authUser: null,
-        loading: true
-      }
-    }>
+        loading: true,
+      }}
+    >
       {children}
     </WhateverContext.Provider>
-  )
+  );
 };
 
 export const useWhatever = () => useContext(WhateverContext);
-

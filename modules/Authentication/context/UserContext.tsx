@@ -1,38 +1,39 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { auth } from "@Configs/Firebase"
+
+import { auth } from '@Configs/Firebase';
 
 interface userContextInterface {
-  userId: string | null,
-  setUserId: Function,
-  user: Object | null,
-  setUser: Function
+  userId: string | null;
+  setUserId: Function;
+  user: Object | null;
+  setUser: Function;
 }
 
 export const UserContext = createContext({} as userContextInterface);
 
 interface UserProviderProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
-const formatAuthUser = (user) => ({
+const formatAuthUser = user => ({
   uid: user.uid,
-  email: user.email
+  email: user.email,
 });
 
 export const UserProvider = ({ children }: UserProviderProps) => {
   const [userId, setUserId] = useState(null);
   const [user, setUser] = useState(null);
 
-  const authStateChanged = async (authState) => {
+  const authStateChanged = async authState => {
     if (!authState) {
-      setUserId(null)
-      setUser(null)
+      setUserId(null);
+      setUser(null);
       return;
     }
 
     // var formattedUser = formatAuthUser(authState);
     console.log(authState);
-    setUserId(authState.uid);    
+    setUserId(authState.uid);
     // setUser(formatAuthUser);
   };
 
@@ -42,18 +43,17 @@ export const UserProvider = ({ children }: UserProviderProps) => {
   }, []);
 
   return (
-    <UserContext.Provider value={
-      {
+    <UserContext.Provider
+      value={{
         userId,
         setUserId,
         user,
-        setUser
-      }
-    }>
+        setUser,
+      }}
+    >
       {children}
     </UserContext.Provider>
-  )
+  );
 };
 
 export const useUser = () => useContext(UserContext);
-

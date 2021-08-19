@@ -1,10 +1,10 @@
 export const BillTypes = {
   EXPENSE: 'EXPENSE',
-  INCOME: 'INCOME'
-}
+  INCOME: 'INCOME',
+};
 
-export const BillStatus  = {
+export const BillStatus = {
   PAID: 'PAID',
   NOT_PAID: 'NOT_PAID',
-  PENDING: 'PENDING'
-}
+  PENDING: 'PENDING',
+};

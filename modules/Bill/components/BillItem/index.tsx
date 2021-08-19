@@ -1,92 +1,104 @@
-import { useState, useMemo } from "react";
-import { Bill } from "@Modules/Bill/interfaces/Bill.interface";
-
+import { useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { BillTypes, BillStatus } from "@Modules/Bill/constants/Types";
-import { Button, IconButton, Box, Text, Tag, Flex, Stack, Spacer } from "@chakra-ui/react"
-import { EditIcon, DeleteIcon, ArrowUpIcon, ArrowDownIcon } from '@chakra-ui/icons'
+import { Button, IconButton, Box, Text, Tag, Flex, Stack, Spacer } from '@chakra-ui/react';
+import { EditIcon, DeleteIcon, ArrowUpIcon, ArrowDownIcon } from '@chakra-ui/icons';
 
-import { billsCollection } from '@Modules/Bill/constants/FirestoreCollections'
+import { BillTypes, BillStatus } from '@Modules/Bill/constants/Types';
+import { Bill } from '@Modules/Bill/interfaces/Bill.interface';
+import { billsCollection } from '@Modules/Bill/constants/FirestoreCollections';
 
 interface BillItemProps {
-  bill: Bill
+  bill: Bill;
 }
 
 export default function BillItem({ bill }: BillItemProps) {
   const router = useRouter();
   const [loadings, setLoadings] = useState({
     changingStatus: null,
-    deleting: false
-  })
+    deleting: false,
+  });
 
+  const formatValue = value => {
+    return `R$${Number(value).toFixed(2).replace('.', ',')}`;
+  };
 
-  const formatValue = (value) => {
-    return `R$${Number(value).toFixed(2).replace('.', ',')}`
-  }
-
-  const formatDate = (value) => {
-    const date = new Date(value).toLocaleString('pt-BR').substr(0, 10)
-    return `${date}`
-  }
+  const formatDate = value => {
+    const date = new Date(value).toLocaleString('pt-BR').substr(0, 10);
+    return `${date}`;
+  };
 
   const billValue = useMemo(() => {
     const typesScheme = {
       [BillTypes.EXPENSE]: 'red',
-      [BillTypes.INCOME]: 'green'
-    }
+      [BillTypes.INCOME]: 'green',
+    };
 
     const icon = {
-      [BillTypes.EXPENSE]: <ArrowDownIcon color='red' />,
-      [BillTypes.INCOME]: <ArrowUpIcon color='green' />
-    }
+      [BillTypes.EXPENSE]: <ArrowDownIcon color="red" />,
+      [BillTypes.INCOME]: <ArrowUpIcon color="green" />,
+    };
 
-    return <Tag colorScheme={typesScheme[bill.type]} color={typesScheme[bill.type]}>{icon[bill.type] ?? <></>} {formatValue(bill.value)}</Tag>
-  }, [bill])
+    return (
+      <Tag colorScheme={typesScheme[bill.type]} color={typesScheme[bill.type]}>
+        {icon[bill.type] ?? <></>} {formatValue(bill.value)}
+      </Tag>
+    );
+  }, [bill]);
 
-  const changeBillStatus = async (status) => {
+  const changeBillStatus = async status => {
     setLoadings({
       ...loadings,
-      changingStatus: status
-    })
+      changingStatus: status,
+    });
 
     await billsCollection.doc(bill.id).update({
-      status
-    })
+      status,
+    });
 
     setLoadings({
       ...loadings,
-      changingStatus: null
-    })
-  }
+      changingStatus: null,
+    });
+  };
 
   const deleteBill = async () => {
     setLoadings({
       ...loadings,
-      deleting: true
-    })
+      deleting: true,
+    });
 
-    await billsCollection.doc(bill.id).delete()
+    await billsCollection.doc(bill.id).delete();
 
     setLoadings({
       ...loadings,
-      changingStatus: false
-    })
-  }
+      changingStatus: false,
+    });
+  };
 
   return (
-    <Box w="100%" p={4} marginBottom="10px"  borderWidth="1px" borderRadius="lg">
+    <Box w="100%" p={4} marginBottom="10px" borderWidth="1px" borderRadius="lg">
       <Flex direction="row" justifyContent="space-between" alignItems="center">
         <Stack spacing="3">
           <Flex direction="row" alignItems="center">
-            <Text fontSize="xl" as="b">{bill.name}</Text>
-            <Text fontSize="sm" color="gray.300" marginLeft="10px">Due date {formatDate(bill.dueDate)}</Text>
+            <Text fontSize="xl" as="b">
+              {bill.name}
+            </Text>
+            <Text fontSize="sm" color="gray.300" marginLeft="10px">
+              Due date {formatDate(bill.dueDate)}
+            </Text>
           </Flex>
 
-          {bill.description && <Text fontSize="sm" color="gray.300">{bill.description}</Text>}
+          {bill.description && (
+            <Text fontSize="sm" color="gray.300">
+              {bill.description}
+            </Text>
+          )}
 
           <div>{billValue}</div>
 
-          <Text fontSize="xs" color="gray">Created at {formatDate(bill.createdAt)}</Text>
+          <Text fontSize="xs" color="gray">
+            Created at {formatDate(bill.createdAt)}
+          </Text>
         </Stack>
 
         <Flex alignItems="center">
@@ -96,7 +108,8 @@ export default function BillItem({ bill }: BillItemProps) {
               variant={bill.status === BillStatus.PENDING ? 'solid' : 'outline'}
               onClick={() => changeBillStatus(BillStatus.PENDING)}
               isLoading={loadings?.changingStatus === BillStatus.PENDING}
-              colorScheme="yellow">
+              colorScheme="yellow"
+            >
               Pending
             </Button>
 
@@ -106,8 +119,9 @@ export default function BillItem({ bill }: BillItemProps) {
               onClick={() => changeBillStatus(BillStatus.PAID)}
               isLoading={loadings?.changingStatus === BillStatus.PAID}
               colorScheme="green"
-              marginTop="5px">
-                Paid
+              marginTop="5px"
+            >
+              Paid
             </Button>
 
             <Button
@@ -116,7 +130,8 @@ export default function BillItem({ bill }: BillItemProps) {
               onClick={() => changeBillStatus(BillStatus.NOT_PAID)}
               isLoading={loadings?.changingStatus === BillStatus.NOT_PAID}
               colorScheme="red"
-              marginTop="5px">
+              marginTop="5px"
+            >
               Not paid
             </Button>
           </Flex>
@@ -126,7 +141,8 @@ export default function BillItem({ bill }: BillItemProps) {
             icon={<EditIcon />}
             onClick={() => router.push(`/bill/${bill.id}`)}
             variant="outline"
-            size="sm" />
+            size="sm"
+          />
 
           <IconButton
             aria-label="Delete bill"
@@ -135,11 +151,11 @@ export default function BillItem({ bill }: BillItemProps) {
             onClick={() => deleteBill()}
             icon={<DeleteIcon />}
             variant="outline"
-            marginLeft="10px" 
-            size="sm" />
+            marginLeft="10px"
+            size="sm"
+          />
         </Flex>
-
       </Flex>
     </Box>
-  )
+  );
 }

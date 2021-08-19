@@ -41,6 +41,7 @@ module.exports = {
   },
   settings: {
     'import/resolver': {
+      'typescript': {},
       'babel-module': {
         extensions: ['.js', '.jsx', '.ts', '.tsx'],
       },
@@ -143,14 +144,5 @@ module.exports = {
       },
     ],
     'no-restricted-syntax': ['error', 'ForInStatement', 'LabeledStatement', 'WithStatement'],
-
-    // warnings to improve tests
-    'testing-library/prefer-screen-queries': 'warn',
-    'testing-library/prefer-presence-queries': 'warn',
-    'jest-dom/prefer-in-document': 'warn',
-
-    'jest/no-disabled-tests': 'warn',
-    'jest/expect-expect': 'error',
-    'jest/no-identical-title': 'off',
   },
 };
