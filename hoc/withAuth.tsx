@@ -8,8 +8,6 @@ const withAuth = WrappedComponent => {
       const Router = useRouter();
       const { userId } = useUser();
 
-      console.log(userId);
-
       if (!userId) {
         Router.replace('/login');
         return null;

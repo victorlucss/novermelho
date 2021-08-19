@@ -79,8 +79,6 @@ const BillFilters = ({ filters, onChange, from, to }: BillFiltersProps) => {
     return finalMonths;
   }, [filters.year]);
 
-  console.log(filters.year);
-
   return (
     <Box marginBottom="10px" borderWidth="1px" borderRadius="lg">
       <form>

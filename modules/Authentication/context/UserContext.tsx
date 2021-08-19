@@ -32,7 +32,6 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     }
 
     // var formattedUser = formatAuthUser(authState);
-    console.log(authState);
     setUserId(authState.uid);
     // setUser(formatAuthUser);
   };

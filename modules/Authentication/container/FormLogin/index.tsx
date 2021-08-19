@@ -18,7 +18,9 @@ const FormLogin = () => {
   const { userId, setUserId } = useUser();
 
   useEffect(() => {
-    Router.replace('/');
+    if (userId) {
+      Router.replace('/');
+    }
   }, [userId]);
 
   const onSubmit = async values => {

@@ -61,7 +61,6 @@ const FormBill = ({ billId }: FormBillProps) => {
 
     try {
       if (billId) {
-        console.log(bill);
         await billsCollection.doc(billId).update(bill);
       } else {
         await billsCollection.add(bill);
@@ -143,8 +142,6 @@ const FormBill = ({ billId }: FormBillProps) => {
       value: BillTypes.INCOME,
     },
   ];
-
-  console.log(errors);
 
   return (
     <Box margin="10px" padding="10px" borderWidth="1px" borderRadius="lg">
