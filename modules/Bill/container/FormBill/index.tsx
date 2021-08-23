@@ -1,14 +1,13 @@
 import { useMemo, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import Error from 'next/error';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@chakra-ui/button';
 import { useToast, Flex, Spacer, Box } from '@chakra-ui/react';
 
 import { billsCollection } from '@Modules/Bill/constants/FirestoreCollections';
 import { Bill } from '@Modules/Bill/interfaces/Bill.interface';
 import { BillTypes, BillStatus } from '@Modules/Bill/constants/Types';
-import { Input, MoneyInput, Select } from '@Components';
+import { Input, MoneyInput, Select, DatePicker } from '@Components';
 import { useUser } from '@Modules/Authentication/context/UserContext';
 
 const MONTHS_DICT = {
@@ -35,8 +34,10 @@ const FormBill = ({ billId }: FormBillProps) => {
     handleSubmit,
     register,
     setValue,
+    control,
     formState: { errors, isSubmitting },
   } = useForm();
+
   const router = useRouter();
   const toast = useToast();
   const { userId } = useUser();
@@ -46,11 +47,14 @@ const FormBill = ({ billId }: FormBillProps) => {
   const onSubmit = async values => {
     if (!userId) return;
 
+    const dueDate = new Date(values.dueDate);
+    dueDate.setHours(3, 0, 0, 0);
+
     const bill: Bill = {
       name: values.name,
       description: values.description ?? '',
       value: Number(values.value),
-      dueDate: new Date(`${values.dueDate} 03:00`).getTime(),
+      dueDate: dueDate.getTime(),
       year: +values.year,
       status: billId ? foundBill?.status : BillStatus.PENDING,
       month: +values.month,
@@ -78,8 +82,9 @@ const FormBill = ({ billId }: FormBillProps) => {
 
   useEffect(() => {
     const findBill = async () => {
-      const billDoc = await billsCollection.doc(billId).get();
+      if (!!billId) return;
 
+      const billDoc = await billsCollection.doc(billId).get();
       if (billDoc.exists) {
         setFoundBill({ id: billDoc.id, ...billDoc.data() } as Bill);
       } else {
@@ -98,11 +103,11 @@ const FormBill = ({ billId }: FormBillProps) => {
     //   Object.entries(foundBill).map(([value, key]))
     // }
     setValue('name', foundBill?.name);
-    setValue('dueDate', new Date(foundBill?.dueDate).toString());
+    setValue('dueDate', foundBill?.dueDate);
     setValue('year', foundBill?.year);
     setValue('month', foundBill?.month);
     setValue('type', foundBill?.type);
-    // setValue('value', foundBill?.value)
+    setValue('value', foundBill?.value);
   }, [foundBill]);
 
   const years = useMemo(() => {
@@ -163,13 +168,18 @@ const FormBill = ({ billId }: FormBillProps) => {
             marginBottom="10px"
           />
 
-          <Input
-            type="date"
+          <Controller
+            control={control}
             name="dueDate"
-            label="Billing due date"
-            {...register('dueDate')}
-            error={errors.dueDate?.message}
-            marginBottom="10px"
+            render={({ field }) => (
+              <DatePicker
+                name="dueDate"
+                label="Bill Due Date"
+                onChange={date => field.onChange(date)}
+                selected={field.value}
+                style={{ marginBottom: '10px' }}
+              />
+            )}
           />
 
           <Select

@@ -4,10 +4,12 @@ import { ChakraProvider } from '@chakra-ui/react';
 
 import theme from '@Configs/theme';
 import { UserProvider } from '@Modules/Authentication/context/UserContext';
+import 'react-datepicker/dist/react-datepicker.css';
+import './styles.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider>
       <UserProvider>
         <Component {...pageProps} />
       </UserProvider>
