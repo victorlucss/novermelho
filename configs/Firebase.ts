@@ -2,13 +2,13 @@ import firebase from 'firebase';
 import 'firebase/auth';
 
 const FirebaseCredentials = {
-  apiKey: 'AIzaSyA5kUowUYSWIuY3OD4FlzUmHiu6u49O75o',
-  authDomain: 'tonovermelho-35267.firebaseapp.com',
-  projectId: 'tonovermelho-35267',
-  storageBucket: 'tonovermelho-35267.appspot.com',
-  messagingSenderId: '640782420432',
-  appId: '1:640782420432:web:a5a7e04733337b4ff851d5',
-  measurementId: 'G-MDHXVRN5HQ',
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 if (!firebase.apps.length) {
