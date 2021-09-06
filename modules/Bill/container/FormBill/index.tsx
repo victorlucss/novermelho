@@ -82,7 +82,7 @@ const FormBill = ({ billId }: FormBillProps) => {
 
   useEffect(() => {
     const findBill = async () => {
-      if (!!billId) return;
+      if (!billId) return;
 
       const billDoc = await billsCollection.doc(billId).get();
       if (billDoc.exists) {
@@ -96,7 +96,7 @@ const FormBill = ({ billId }: FormBillProps) => {
     };
 
     findBill();
-  }, [billId]);
+  }, [billId, toast]);
 
   useEffect(() => {
     // if (foundBill) {
