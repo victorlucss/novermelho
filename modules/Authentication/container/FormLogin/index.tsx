@@ -4,7 +4,6 @@ import { Flex, Box, useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import Link from 'next/link';
 
 import AuthenticationService from '@Authentication/services/AuthenticationService';
 import User from '@Authentication/interfaces/User.interface';
