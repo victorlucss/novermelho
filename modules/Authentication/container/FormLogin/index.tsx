@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@chakra-ui/button';
 import { Flex, Box, useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useEffect } from 'react';
 import Link from 'next/link';
 
@@ -73,6 +74,11 @@ const FormLogin = () => {
             <Link passHref href="forgot">
               <Button variant="link" marginLeft="10px">
                 Forgot password
+              </Button>
+            </Link>
+            <Link passHref href="signup">
+              <Button variant="outline" marginLeft="10px">
+                Register
               </Button>
             </Link>
           </div>
