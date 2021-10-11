@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 
 import AuthenticationService from '@Authentication/services/AuthenticationService';
+import User from '@Authentication/interfaces/User.interface';
 import { useUser } from '@Modules/Authentication/context/UserContext';
 import { Input } from '@Components';
 
@@ -27,9 +28,9 @@ const FormLogin = () => {
 
   const onSubmit = async values => {
     try {
-      const result = await AuthenticationService.signIn(values?.email, values?.password);
-      if (result?.uid) {
-        setUserId(result?.uid);
+      const { uid } = (await AuthenticationService.signIn(values?.email, values?.password)) as User;
+      if (uid) {
+        setUserId(uid);
         Router.replace('/');
       }
     } catch (err) {
