@@ -99,9 +99,6 @@ const FormBill = ({ billId }: FormBillProps) => {
   }, [billId, toast]);
 
   useEffect(() => {
-    // if (foundBill) {
-    //   Object.entries(foundBill).map(([value, key]))
-    // }
     setValue('name', foundBill?.name);
     setValue('dueDate', foundBill?.dueDate);
     setValue('year', foundBill?.year);
