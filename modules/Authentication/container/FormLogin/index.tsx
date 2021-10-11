@@ -1,14 +1,16 @@
 import { useForm } from 'react-hook-form';
 import { Button } from '@chakra-ui/button';
-import { Flex, Box } from '@chakra-ui/react';
+import { Flex, Box, useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import Link from 'next/link';
 
-import { auth } from '@Configs/Firebase';
+import AuthenticationService from '@Authentication/services/AuthenticationService';
 import { useUser } from '@Modules/Authentication/context/UserContext';
 import { Input } from '@Components';
 
 const FormLogin = () => {
+  const toast = useToast();
   const {
     handleSubmit,
     register,
@@ -24,10 +26,18 @@ const FormLogin = () => {
   }, [userId]);
 
   const onSubmit = async values => {
-    const { user } = await auth.signInWithEmailAndPassword(values?.email, values?.password);
-
-    setUserId(user.uid);
-    Router.replace('/');
+    try {
+      const result = await AuthenticationService.signIn(values?.email, values?.password);
+      if (result?.uid) {
+        setUserId(result?.uid);
+        Router.replace('/');
+      }
+    } catch (err) {
+      toast({
+        description: err.message,
+        status: 'error',
+      });
+    }
   };
 
   return (
@@ -59,6 +69,11 @@ const FormLogin = () => {
             <Button variant="outline" marginLeft="10px">
               Register
             </Button>
+            <Link passHref href="forgot">
+              <Button variant="link" marginLeft="10px">
+                Forgot password
+              </Button>
+            </Link>
           </div>
         </Flex>
       </form>
