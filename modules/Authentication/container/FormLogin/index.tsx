@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@chakra-ui/button';
 import { Flex, Box } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useEffect } from 'react';
 
 import { auth } from '@Configs/Firebase';
@@ -56,9 +57,11 @@ const FormLogin = () => {
             <Button type="submit" isLoading={isSubmitting}>
               Login
             </Button>
-            <Button variant="outline" marginLeft="10px">
-              Register
-            </Button>
+            <Link passHref href="signup">
+              <Button variant="outline" marginLeft="10px">
+                Register
+              </Button>
+            </Link>
           </div>
         </Flex>
       </form>
