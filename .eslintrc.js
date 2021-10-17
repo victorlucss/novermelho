@@ -1,7 +1,9 @@
 const internalPaths = [
   '@Configs/**',
   '@Components/**',
+  '@Authentication/**',
   '@Modules/**',
+  '@Utils/**',
   '@/**',
 ];
 
