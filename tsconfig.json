@@ -16,6 +16,10 @@
       ],
       "@/*": [
         "./*"
+      ],
+      "@Authentication/*": ["./modules/Authentication/*"],
+      "@Utils/*": [
+        "./utils/*"
       ]
     },
     "target": "es5",

@@ -5,7 +5,9 @@
       "@Configs/*": ["./configs/*"],
       "@Components/*": ["./components/*"],
       "@Modules/*": ["./modules/*"],
-      "@/*": ["./*"]
+      "@Authentication/*": ["./modules/Authentication/*"],
+      "@/*": ["./*"],
+      "@Utils/*": ["./utils/*"]
     }
   }
 }
