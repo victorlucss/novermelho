@@ -36,7 +36,7 @@ const FormForgotPassword = () => {
   };
 
   return (
-    <Box margin="10px" padding="10px" borderWidth="1px" borderRadius="lg">
+    <Box margin="10px" padding="10px" borderRadius="lg" maxW={450} bg="white" p="8">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Flex direction="column" alignItems="flex-start">
           <Input
@@ -48,14 +48,14 @@ const FormForgotPassword = () => {
             marginBottom="10px"
           />
 
-          <div>
-            <Button type="submit" isLoading={isSubmitting}>
+          <Box w="100%" mt="4">
+            <Button type="submit" isFullWidth colorScheme="red" isLoading={isSubmitting}>
               Send
             </Button>
-            <Button variant="link" marginLeft="10px" onClick={() => Router.back()}>
+            <Button variant="link" isFullWidth  onClick={() => Router.back()}>
               Back
             </Button>
-          </div>
+          </Box>
         </Flex>
       </form>
     </Box>
