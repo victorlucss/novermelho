@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { Button } from '@chakra-ui/button';
-import { Flex, Box, useToast } from '@chakra-ui/react';
+import { Flex, Box, useToast, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useEffect } from 'react';
@@ -42,7 +42,7 @@ const FormLogin = () => {
   };
 
   return (
-    <Box margin="10px" padding="10px" borderWidth="1px" borderRadius="lg">
+    <Box margin="10px" padding="10px" borderRadius="lg" maxW={450} bg="white" p="8">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Flex direction="column" alignItems="flex-start">
           <Input
@@ -53,34 +53,37 @@ const FormLogin = () => {
             error={errors.email?.message}
             marginBottom="10px"
           />
+          <Box w="100%">
+            <Input
+              type="password"
+              name="password"
+              label="Password"
+              {...register('password')}
+              error={errors.password?.message}
+              marginBottom="10px"
+            />
+            <Box textAlign="left" mt="-2">
+              <Link passHref href="forgot">
+                <Button variant="link" fontSize="smaller">
+                  Forgot password
+                </Button>
+              </Link>
+            </Box>
+          </Box>
 
-          <Input
-            type="password"
-            name="password"
-            label="Password"
-            {...register('password')}
-            error={errors.password?.message}
-            marginBottom="10px"
-          />
-
-          <div>
-            <Button type="submit" isLoading={isSubmitting}>
+          <Box w="100%" mt="4">
+            <Button type="submit" colorScheme="red" isFullWidth isLoading={isSubmitting}>
               Login
             </Button>
-            <Button variant="outline" marginLeft="10px">
-              Register
-            </Button>
-            <Link passHref href="forgot">
-              <Button variant="link" marginLeft="10px">
-                Forgot password
-              </Button>
-            </Link>
-            <Link passHref href="signup">
-              <Button variant="outline" marginLeft="10px">
-                Register
-              </Button>
-            </Link>
-          </div>
+            <Flex flex="1" justify="center" mt="4">
+              <Text>Not registered yet?</Text>
+              <Link passHref href="signup">
+                <Button variant="link" marginLeft="10px">
+                  Sign up here
+                </Button>
+              </Link>
+            </Flex>
+          </Box>
         </Flex>
       </form>
     </Box>

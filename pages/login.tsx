@@ -8,7 +8,7 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <Box margin="10">
+    <Box margin="10" justify="center" align="center">
       <FormLogin />
     </Box>
   );
