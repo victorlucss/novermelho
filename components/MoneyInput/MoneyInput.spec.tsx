@@ -1,12 +1,12 @@
-import { render, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { MoneyInput } from '.'
 
 describe('Modal component', () => {
     it('renders correctly', () => {
-        const { getByText }  = render(
+        render(
             <MoneyInput name='input' label='label'/>
         )
     
-        expect(getByText('label')).toBeInTheDocument()
+        expect(screen.getByText('label')).toBeInTheDocument()
     })
 })
