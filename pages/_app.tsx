@@ -9,7 +9,7 @@ import './styles.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <UserProvider>
         <Component {...pageProps} />
       </UserProvider>
