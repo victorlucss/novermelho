@@ -20,13 +20,9 @@ const ListBills = () => {
   const loadBills = useCallback(() => {
     if (!userId) return;
 
-    billsCollection
-      .where('userId', '==', userId)
-      .where('year', '==', filters?.year)
-      .where('month', '==', filters?.month)
-      .onSnapshot(({ docs }) => {
-        setBills(docs.map(bill => ({ id: bill.id, ...bill.data() } as Bill)));
-      });
+    billsCollection.where('userId', '==', userId).onSnapshot(({ docs }) => {
+      setBills(docs.map(bill => ({ id: bill.id, ...bill.data() } as Bill)));
+    });
   }, [filters]);
 
   useEffect(() => {

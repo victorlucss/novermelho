@@ -63,7 +63,7 @@ const FormLogin = () => {
               marginBottom="10px"
             />
             <Box textAlign="left" mt="-2">
-              <Link passHref href="forgot">
+              <Link href="forgot">
                 <Button variant="link" fontSize="smaller">
                   Forgot password
                 </Button>

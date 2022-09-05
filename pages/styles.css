@@ -1,4 +1,4 @@
-.light-theme{
+/* .light-theme{
   --light-gray: var(--chakra-colors-gray-200);
   --gray: var(--chakra-colors-gray-300);
   --blue700:var(--chakra-colors-blue-600);
@@ -12,6 +12,7 @@
   --text:var(--chakra-colors-black);
   --negative-text:var(--chakra-colors-white);
 }
+
 .dark-theme{
   --light-gray: var(--chakra-colors-gray-600);
   --gray: var(--chakra-colors-gray-500);
@@ -25,10 +26,10 @@
   --monthBackground: var(--chakra-colors-gray-700);
   --text:var(--chakra-colors-gray-200);
   --negative-text:var(--chakra-colors-black);
-}
+} */
 
 /* if you dont want to use chakra's theme use this class in the wrapping div. These are the exact original values */
-.light-theme-original{
+/* .light-theme-original{
   --light-gray: #cccccc;
   --gray: #b3b3b3;
   --blue700:#2a69ac;
@@ -38,7 +39,7 @@
   --blue300: #e2e8f0;
   --blue200: #edf2f7;
   --blue100: #f7fafc;
-}
+} */
 .react-datepicker {
 	font-family: unset;
 	font-size: 0.9rem;
