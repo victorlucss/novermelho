@@ -6,3 +6,4 @@ export * from './Modal';
 export * from './LateralMenu';
 export * from './Box';
 export * from './RadioCard/radio-card.component';
+export * from './If/if.component';

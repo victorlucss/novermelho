@@ -1,11 +1,30 @@
 import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { Button, IconButton, Box, Text, Tag, Flex, Stack, Center } from '@chakra-ui/react';
+import {
+  Button,
+  IconButton,
+  Box,
+  Text,
+  Center,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  PopoverArrow,
+  Stack,
+  Tag,
+  Flex,
+  Badge,
+} from '@chakra-ui/react';
 import { EditIcon, DeleteIcon, ArrowUpIcon, ArrowDownIcon, InfoIcon, WarningTwoIcon } from '@chakra-ui/icons';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { MdOutlineMoneyOffCsred, MdOutlineAttachMoney } from 'react-icons/md';
+import { IoMdCalendar } from 'react-icons/io';
 
 import { BillTypes, BillStatus } from '@Modules/Bill/constants/Types';
 import { Bill } from '@Modules/Bill/interfaces/Bill.interface';
 import { billsCollection } from '@Modules/Bill/constants/FirestoreCollections';
+import { If } from '@Components';
 
 interface BillItemProps {
   bill: Bill;
@@ -125,6 +144,29 @@ export const BillItem = ({ bill }: BillItemProps) => {
     return '';
   }, [isExpiring, isPassDueDate]);
 
+  const billStatus = useMemo(() => {
+    const props = {
+      color: 'yellow',
+      text: 'Pendente',
+    };
+
+    if (bill.status === BillStatus.NOT_PAID) {
+      props.color = 'red';
+      props.text = 'Não pago';
+    }
+
+    if (bill.status === BillStatus.PAID) {
+      props.color = 'green';
+      props.text = 'Pago';
+    }
+
+    return (
+      <Badge colorScheme={props.color} size="sm">
+        {props.text}
+      </Badge>
+    );
+  }, [bill.status]);
+
   return (
     <Box w="100%" p={4} marginBottom="10px" borderWidth="1px" borderRadius="lg" borderColor={itemBorderColor}>
       {billSituation}
@@ -133,7 +175,7 @@ export const BillItem = ({ bill }: BillItemProps) => {
         <Stack spacing="1">
           <Flex direction="column" alignItems="flex-start">
             <Text fontSize="md" as="b">
-              {bill.name}
+              {bill.name} {billStatus}
             </Text>
             <Text fontSize="xx-small" color="gray.600">
               Vencimento {formatDate(bill.dueDate)}
@@ -150,58 +192,92 @@ export const BillItem = ({ bill }: BillItemProps) => {
         </Stack>
 
         <Flex alignItems="center">
-          <Flex direction="column" marginRight="10px">
-            <Button
-              size="xs"
-              variant={bill.status === BillStatus.PENDING ? 'solid' : 'outline'}
-              onClick={() => changeBillStatus(BillStatus.PENDING)}
-              isLoading={loadings?.changingStatus === BillStatus.PENDING}
-              colorScheme="yellow"
-            >
-              Pendente
-            </Button>
+          <Popover placement="bottom-end" isLazy>
+            <PopoverTrigger>
+              <IconButton
+                aria-label="More server options"
+                icon={<BsThreeDotsVertical />}
+                variant="outline"
+                size="sm"
+                w="fit-content"
+              />
+            </PopoverTrigger>
+            <PopoverContent w="fit-content" _focus={{ boxShadow: 'none' }}>
+              <PopoverArrow />
+              <PopoverBody>
+                <Stack>
+                  <If condition={bill.status !== BillStatus.NOT_PAID}>
+                    <Button
+                      w="210px"
+                      variant="ghost"
+                      leftIcon={<MdOutlineMoneyOffCsred />}
+                      justifyContent="flex-start"
+                      fontWeight="normal"
+                      fontSize="sm"
+                      onClick={() => changeBillStatus(BillStatus.NOT_PAID)}
+                      isLoading={loadings?.changingStatus === BillStatus.NOT_PAID}
+                    >
+                      Marcar como não pago
+                    </Button>
+                  </If>
+                  <If condition={bill.status !== BillStatus.PAID}>
+                    <Button
+                      w="210px"
+                      variant="ghost"
+                      leftIcon={<MdOutlineAttachMoney />}
+                      justifyContent="flex-start"
+                      fontWeight="normal"
+                      fontSize="sm"
+                      onClick={() => changeBillStatus(BillStatus.PAID)}
+                      isLoading={loadings?.changingStatus === BillStatus.PAID}
+                    >
+                      Marcar como pago
+                    </Button>
+                  </If>
 
-            <Button
-              size="xs"
-              variant={bill.status === BillStatus.PAID ? 'solid' : 'outline'}
-              onClick={() => changeBillStatus(BillStatus.PAID)}
-              isLoading={loadings?.changingStatus === BillStatus.PAID}
-              colorScheme="green"
-              marginTop="5px"
-            >
-              Pago
-            </Button>
+                  <If condition={bill.status !== BillStatus.PENDING}>
+                    <Button
+                      w="210px"
+                      variant="ghost"
+                      leftIcon={<IoMdCalendar />}
+                      justifyContent="flex-start"
+                      fontWeight="normal"
+                      fontSize="sm"
+                      onClick={() => changeBillStatus(BillStatus.PENDING)}
+                      isLoading={loadings?.changingStatus === BillStatus.PENDING}
+                    >
+                      Marcar como pendente
+                    </Button>
+                  </If>
 
-            <Button
-              size="xs"
-              variant={bill.status === BillStatus.NOT_PAID ? 'solid' : 'outline'}
-              onClick={() => changeBillStatus(BillStatus.NOT_PAID)}
-              isLoading={loadings?.changingStatus === BillStatus.NOT_PAID}
-              colorScheme="red"
-              marginTop="5px"
-            >
-              Nõa pago
-            </Button>
-          </Flex>
+                  <Button
+                    w="210px"
+                    variant="ghost"
+                    leftIcon={<EditIcon />}
+                    justifyContent="flex-start"
+                    fontWeight="normal"
+                    fontSize="sm"
+                    onClick={() => router.replace(`/bill/${bill.id}`)}
+                  >
+                    Editar conta
+                  </Button>
 
-          <IconButton
-            aria-label="Editar conta"
-            icon={<EditIcon />}
-            onClick={() => router.push(`/bill/${bill.id}`)}
-            variant="outline"
-            size="sm"
-          />
-
-          <IconButton
-            aria-label="Deletar conta"
-            colorScheme="red"
-            color="red.500"
-            onClick={() => deleteBill()}
-            icon={<DeleteIcon />}
-            variant="outline"
-            marginLeft="10px"
-            size="sm"
-          />
+                  <Button
+                    w="210px"
+                    variant="ghost"
+                    leftIcon={<DeleteIcon />}
+                    justifyContent="flex-start"
+                    fontWeight="normal"
+                    colorScheme="red"
+                    fontSize="sm"
+                    onClick={() => deleteBill()}
+                  >
+                    Deletar conta
+                  </Button>
+                </Stack>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
         </Flex>
       </Flex>
     </Box>
