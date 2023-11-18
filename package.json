@@ -9,7 +9,7 @@
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=16 <17"
   },
   "dependencies": {
     "@chakra-ui/button": "^1.4.2",
