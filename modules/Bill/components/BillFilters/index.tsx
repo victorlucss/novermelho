@@ -77,7 +77,7 @@ const BillFilters = ({ filters, onChange, from, to }: BillFiltersProps) => {
     }
 
     return finalMonths;
-  }, [filters.year]);
+  }, []);
 
   return (
     <Box marginBottom="10px" borderWidth="1px" borderRadius="lg">
@@ -85,7 +85,7 @@ const BillFilters = ({ filters, onChange, from, to }: BillFiltersProps) => {
         <Flex p="2" alignItems="flex-end">
           <Select
             name="year"
-            label="Year"
+            label="Ano"
             value={filters?.year}
             options={years}
             {...register('year')}
@@ -98,7 +98,7 @@ const BillFilters = ({ filters, onChange, from, to }: BillFiltersProps) => {
 
           <Select
             name="month"
-            label="Months"
+            label="Mês"
             value={filters?.month}
             options={months}
             {...register('month')}
