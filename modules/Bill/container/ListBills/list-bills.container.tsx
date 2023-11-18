@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useToast } from '@chakra-ui/react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Box, Button, Skeleton, Stack, useToast } from '@chakra-ui/react';
 
 import { billsCollection } from '@Modules/Bill/constants/FirestoreCollections';
 import { Bill } from '@Modules/Bill/interfaces/Bill.interface';
@@ -11,7 +11,7 @@ import { BillTypes } from '@Modules/Bill/constants/Types';
 
 export const ListBillsContainer = () => {
   const { userId } = useUser();
-
+  const [isLoaded, setIsLoaded] = useState(false);
   const [bills, setBills] = useState<Bill[]>([]);
   const [filters, setFilters] = useState({
     year: new Date().getFullYear(),
@@ -29,8 +29,9 @@ export const ListBillsContainer = () => {
       .where('userId', '==', userId)
       .where('dueDate', '>=', startDate.getTime())
       .where('dueDate', '<=', endDate.getTime())
+      .orderBy('dueDate', 'desc')
       .onSnapshot(({ docs }) => {
-        console.log('docs', docs, filters, startDate, endDate);
+        setIsLoaded(true);
         setBills(docs.map(bill => ({ id: bill.id, ...bill.data() } as Bill)));
       });
   }, [filters, userId]);
@@ -68,11 +69,13 @@ export const ListBillsContainer = () => {
     <div>
       <BillFilters filters={filters} onChange={(target, value) => onChange(target, value)} from={2020} to={2024} />
 
-      <StatsMonth income={income} expense={expense} balance={income - expense} />
+      <StatsMonth income={income} expense={expense} balance={income - expense} isLoaded={isLoaded} />
 
-      {bills.map(bill => (
-        <BillItem key={bill.id} bill={bill} />
-      ))}
+      <Skeleton height="80px" isLoaded={isLoaded}>
+        {bills.map(bill => (
+          <BillItem key={bill.id} bill={bill} />
+        ))}
+      </Skeleton>
     </div>
   );
 };

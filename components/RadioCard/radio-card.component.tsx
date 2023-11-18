@@ -16,9 +16,10 @@ export const RadioCard = props => {
         borderRadius="md"
         boxShadow="md"
         _checked={{
-          bg: 'teal.600',
+          bg: 'gray.600',
           color: 'white',
-          borderColor: 'teal.600',
+          borderColor: 'gray.600',
+          transition: 'all var(--chakra-transition-duration-normal)',
         }}
         _focus={{
           boxShadow: 'outline',

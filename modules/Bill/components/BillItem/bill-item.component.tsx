@@ -20,11 +20,18 @@ import { EditIcon, DeleteIcon, ArrowUpIcon, ArrowDownIcon, InfoIcon, WarningTwoI
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MdOutlineMoneyOffCsred, MdOutlineAttachMoney } from 'react-icons/md';
 import { IoMdCalendar } from 'react-icons/io';
+import { FaAngleDown } from 'react-icons/fa6';
 
 import { BillTypes, BillStatus } from '@Modules/Bill/constants/Types';
 import { Bill } from '@Modules/Bill/interfaces/Bill.interface';
 import { billsCollection } from '@Modules/Bill/constants/FirestoreCollections';
 import { If } from '@Components';
+
+const textsBillStatus = {
+  [BillStatus.NOT_PAID]: 'Não pago',
+  [BillStatus.PAID]: 'Pago',
+  [BillStatus.PENDING]: 'Pendente',
+};
 
 interface BillItemProps {
   bill: Bill;
@@ -144,27 +151,18 @@ export const BillItem = ({ bill }: BillItemProps) => {
     return '';
   }, [isExpiring, isPassDueDate]);
 
-  const billStatus = useMemo(() => {
-    const props = {
-      color: 'yellow',
-      text: 'Pendente',
-    };
+  const billStatusColor = useMemo(() => {
+    let color = 'yellow';
 
     if (bill.status === BillStatus.NOT_PAID) {
-      props.color = 'red';
-      props.text = 'Não pago';
+      color = 'red';
     }
 
     if (bill.status === BillStatus.PAID) {
-      props.color = 'green';
-      props.text = 'Pago';
+      color = 'green';
     }
 
-    return (
-      <Badge colorScheme={props.color} size="sm">
-        {props.text}
-      </Badge>
-    );
+    return color;
   }, [bill.status]);
 
   return (
@@ -174,9 +172,16 @@ export const BillItem = ({ bill }: BillItemProps) => {
       <Flex direction="row" justifyContent="space-between" alignItems="center">
         <Stack spacing="1">
           <Flex direction="column" alignItems="flex-start">
-            <Text fontSize="md" as="b">
-              {bill.name} {billStatus}
-            </Text>
+            <Flex alignItems="center">
+              <Text fontSize="md" as="b">
+                {bill.name}
+              </Text>
+              <If condition={bill.type === BillTypes.EXPENSE && !!bill.category}>
+                <Text fontSize="xx-small" ml={1}>
+                  ({bill.category})
+                </Text>
+              </If>
+            </Flex>
             <Text fontSize="xx-small" color="gray.600">
               Vencimento {formatDate(bill.dueDate)}
             </Text>
@@ -194,6 +199,70 @@ export const BillItem = ({ bill }: BillItemProps) => {
         <Flex alignItems="center">
           <Popover placement="bottom-end" isLazy>
             <PopoverTrigger>
+              <Button
+                aria-label="Selecionar status da conta"
+                rightIcon={<FaAngleDown />}
+                variant="outline"
+                size="sm"
+                w="fit-content"
+                mr={5}
+                colorScheme={billStatusColor}
+              >
+                {textsBillStatus[bill.status]}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent w="fit-content" _focus={{ boxShadow: 'none' }}>
+              <PopoverArrow />
+              <PopoverBody>
+                <Stack>
+                  <Button
+                    w="175px"
+                    variant="ghost"
+                    leftIcon={<MdOutlineMoneyOffCsred />}
+                    justifyContent="flex-start"
+                    fontWeight="normal"
+                    fontSize="sm"
+                    onClick={() => changeBillStatus(BillStatus.NOT_PAID)}
+                    isLoading={loadings?.changingStatus === BillStatus.NOT_PAID}
+                    colorScheme="red"
+                  >
+                    Não pago
+                  </Button>
+
+                  <Button
+                    w="175px"
+                    variant="ghost"
+                    leftIcon={<MdOutlineAttachMoney />}
+                    justifyContent="flex-start"
+                    fontWeight="normal"
+                    fontSize="sm"
+                    onClick={() => changeBillStatus(BillStatus.PAID)}
+                    isLoading={loadings?.changingStatus === BillStatus.PAID}
+                    colorScheme="green"
+                  >
+                    Pago
+                  </Button>
+
+                  <Button
+                    w="175px"
+                    variant="ghost"
+                    leftIcon={<IoMdCalendar />}
+                    justifyContent="flex-start"
+                    fontWeight="normal"
+                    fontSize="sm"
+                    onClick={() => changeBillStatus(BillStatus.PENDING)}
+                    isLoading={loadings?.changingStatus === BillStatus.PENDING}
+                    colorScheme="yellow"
+                  >
+                    Pendente
+                  </Button>
+                </Stack>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+
+          <Popover placement="bottom-end" isLazy>
+            <PopoverTrigger>
               <IconButton
                 aria-label="More server options"
                 icon={<BsThreeDotsVertical />}
@@ -206,50 +275,6 @@ export const BillItem = ({ bill }: BillItemProps) => {
               <PopoverArrow />
               <PopoverBody>
                 <Stack>
-                  <If condition={bill.status !== BillStatus.NOT_PAID}>
-                    <Button
-                      w="210px"
-                      variant="ghost"
-                      leftIcon={<MdOutlineMoneyOffCsred />}
-                      justifyContent="flex-start"
-                      fontWeight="normal"
-                      fontSize="sm"
-                      onClick={() => changeBillStatus(BillStatus.NOT_PAID)}
-                      isLoading={loadings?.changingStatus === BillStatus.NOT_PAID}
-                    >
-                      Marcar como não pago
-                    </Button>
-                  </If>
-                  <If condition={bill.status !== BillStatus.PAID}>
-                    <Button
-                      w="210px"
-                      variant="ghost"
-                      leftIcon={<MdOutlineAttachMoney />}
-                      justifyContent="flex-start"
-                      fontWeight="normal"
-                      fontSize="sm"
-                      onClick={() => changeBillStatus(BillStatus.PAID)}
-                      isLoading={loadings?.changingStatus === BillStatus.PAID}
-                    >
-                      Marcar como pago
-                    </Button>
-                  </If>
-
-                  <If condition={bill.status !== BillStatus.PENDING}>
-                    <Button
-                      w="210px"
-                      variant="ghost"
-                      leftIcon={<IoMdCalendar />}
-                      justifyContent="flex-start"
-                      fontWeight="normal"
-                      fontSize="sm"
-                      onClick={() => changeBillStatus(BillStatus.PENDING)}
-                      isLoading={loadings?.changingStatus === BillStatus.PENDING}
-                    >
-                      Marcar como pendente
-                    </Button>
-                  </If>
-
                   <Button
                     w="210px"
                     variant="ghost"

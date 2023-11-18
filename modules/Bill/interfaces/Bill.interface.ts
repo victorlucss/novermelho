@@ -14,4 +14,5 @@ export interface Bill {
   metadata?: BillMetadata;
   createdAt: number;
   userId: string;
+  category?: string;
 }

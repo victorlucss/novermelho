@@ -1,13 +1,13 @@
-import { useMemo, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@chakra-ui/button';
-import { useToast, Flex } from '@chakra-ui/react';
+import { useToast, Flex, useRadioGroup, HStack, Text } from '@chakra-ui/react';
 
 import { billsCollection } from '@Modules/Bill/constants/FirestoreCollections';
 import { Bill } from '@Modules/Bill/interfaces/Bill.interface';
 import { BillTypes, BillStatus } from '@Modules/Bill/constants/Types';
-import { Input, MoneyInput, Select, DatePicker, Box } from '@Components';
+import { Input, MoneyInput, Select, DatePicker, Box, RadioCard, If } from '@Components';
 import { useUser } from '@Modules/Authentication/context/UserContext';
 
 interface FormBillProps {
@@ -20,6 +20,7 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
     register,
     setValue,
     control,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm();
 
@@ -29,6 +30,15 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
 
   const [foundBill, setFoundBill] = useState<Bill | undefined>();
 
+  const categoriesExpense = ['💳 Cartão de crédito', '💰 Investimento', '💸 Fixo', '🔁 Flexível', '💲 Outro'];
+
+  const { getRootProps, getRadioProps } = useRadioGroup({
+    name: 'category',
+    defaultValue: categoriesExpense[0],
+    onChange: category => setValue('category', category),
+  });
+
+  const group = getRootProps();
   const onSubmit = async values => {
     if (!userId) return;
 
@@ -44,6 +54,7 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
       type: values.type,
       createdAt: new Date().getTime(),
       userId,
+      category: values.type === BillTypes.EXPENSE ? values.category : '',
     };
 
     try {
@@ -88,6 +99,8 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
     setValue('dueDate', foundBill?.dueDate);
     setValue('type', foundBill?.type);
     setValue('value', String(foundBill?.value));
+    setValue('type', foundBill?.type);
+    setValue('category', foundBill?.category);
   }, [foundBill, setValue]);
 
   const types = [
@@ -100,7 +113,7 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
       value: BillTypes.INCOME,
     },
   ];
-
+  const billType = watch('type', false);
   return (
     <Box
       title="Criar nova conta"
@@ -159,6 +172,22 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
             error={errors.value?.message}
             marginBottom="10px"
           />
+
+          <If condition={billType === BillTypes.EXPENSE}>
+            <Text fontWeight="500" fontSize="1rem" mb="0.75rem">
+              Categoria
+            </Text>
+            <HStack {...group} mb="10px">
+              {categoriesExpense.map(value => {
+                const radio = getRadioProps({ value });
+                return (
+                  <RadioCard key={value} {...radio}>
+                    {value}
+                  </RadioCard>
+                );
+              })}
+            </HStack>
+          </If>
 
           <Button type="submit" isLoading={isSubmitting}>
             {billId ? 'Editar' : 'Criar'}
