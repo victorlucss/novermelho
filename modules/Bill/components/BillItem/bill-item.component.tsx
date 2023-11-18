@@ -14,11 +14,10 @@ import {
   Stack,
   Tag,
   Flex,
-  Badge,
 } from '@chakra-ui/react';
 import { EditIcon, DeleteIcon, ArrowUpIcon, ArrowDownIcon, InfoIcon, WarningTwoIcon } from '@chakra-ui/icons';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import { MdOutlineMoneyOffCsred, MdOutlineAttachMoney } from 'react-icons/md';
+import { MdOutlineMoneyOffCsred, MdOutlineAttachMoney, MdCopyAll } from 'react-icons/md';
 import { IoMdCalendar } from 'react-icons/io';
 import { FaAngleDown } from 'react-icons/fa6';
 
@@ -35,9 +34,10 @@ const textsBillStatus = {
 
 interface BillItemProps {
   bill: Bill;
+  onCopyBill: (billId: string) => void;
 }
 
-export const BillItem = ({ bill }: BillItemProps) => {
+export const BillItem = ({ bill, onCopyBill }: BillItemProps) => {
   const router = useRouter();
   const [loadings, setLoadings] = useState({
     changingStatus: null,
@@ -285,6 +285,17 @@ export const BillItem = ({ bill }: BillItemProps) => {
                     onClick={() => router.replace(`/bill/${bill.id}`)}
                   >
                     Editar conta
+                  </Button>
+                  <Button
+                    w="210px"
+                    variant="ghost"
+                    leftIcon={<MdCopyAll />}
+                    justifyContent="flex-start"
+                    fontWeight="normal"
+                    fontSize="sm"
+                    onClick={() => onCopyBill(bill.id)}
+                  >
+                    Copiar conta
                   </Button>
 
                   <Button

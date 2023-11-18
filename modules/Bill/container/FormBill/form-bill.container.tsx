@@ -174,19 +174,21 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
           />
 
           <If condition={billType === BillTypes.EXPENSE}>
-            <Text fontWeight="500" fontSize="1rem" mb="0.75rem">
-              Categoria
-            </Text>
-            <HStack {...group} mb="10px">
-              {categoriesExpense.map(value => {
-                const radio = getRadioProps({ value });
-                return (
-                  <RadioCard key={value} {...radio}>
-                    {value}
-                  </RadioCard>
-                );
-              })}
-            </HStack>
+            <>
+              <Text fontWeight="500" fontSize="1rem" mb="0.75rem">
+                Categoria
+              </Text>
+              <HStack {...group} mb="10px">
+                {categoriesExpense.map(value => {
+                  const radio = getRadioProps({ value });
+                  return (
+                    <RadioCard key={value} {...radio}>
+                      {value}
+                    </RadioCard>
+                  );
+                })}
+              </HStack>
+            </>
           </If>
 
           <Button type="submit" isLoading={isSubmitting}>
