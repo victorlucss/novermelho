@@ -1,11 +1,11 @@
 import withAuth from '@/hoc/withAuth';
 import { LateralMenu } from '@Components/LateralMenu';
-import ListBills from '@Modules/Bill/container/ListBills';
+import { ListBillsContainer } from '@Modules/Bill/container/ListBills/list-bills.container';
 
 const Dashboard = () => {
   return (
     <LateralMenu>
-      <ListBills />
+      <ListBillsContainer />
     </LateralMenu>
   );
 };

@@ -61,6 +61,7 @@ const FormLogin = () => {
 
   return (
     <Box margin="10px" padding="10px" borderRadius="lg" maxW={450} p="8">
+      Desbrave o caminho para a estabilidade financeira. Faça login e conquiste o controle total das suas finanças!
       <Button onClick={onLoginWithGoogle} variant="outline" marginLeft="10px">
         <Flex mr={2}>
           <FcGoogle />

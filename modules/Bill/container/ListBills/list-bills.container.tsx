@@ -1,14 +1,15 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 
 import { billsCollection } from '@Modules/Bill/constants/FirestoreCollections';
 import { Bill } from '@Modules/Bill/interfaces/Bill.interface';
 import BillItem from '@Modules/Bill/components/BillItem';
 import BillFilters from '@Modules/Bill/components/BillFilters';
-import StateMonth from '@Modules/Bill/components/StateMonth';
+import { StatsMonth } from '@Modules/Bill/components/StatsMonth/stats-month.component';
 import { useUser } from '@Modules/Authentication/context/UserContext';
+import { BillTypes } from '@Modules/Bill/constants/Types';
 
-const ListBills = () => {
+export const ListBillsContainer = () => {
   const { userId } = useUser();
 
   const [bills, setBills] = useState<Bill[]>([]);
@@ -51,11 +52,23 @@ const ListBills = () => {
 
   const toast = useToast();
 
+  const income = useMemo(() => {
+    return (
+      bills.filter(bill => bill.type === BillTypes.INCOME).reduce((prev, current) => (prev += current.value), 0) ?? 0
+    );
+  }, [bills]);
+
+  const expense = useMemo(() => {
+    return (
+      bills.filter(bill => bill.type === BillTypes.EXPENSE).reduce((prev, current) => (prev += current.value), 0) ?? 0
+    );
+  }, [bills]);
+
   return (
     <div>
       <BillFilters filters={filters} onChange={(target, value) => onChange(target, value)} from={2020} to={2024} />
 
-      <StateMonth bills={bills} />
+      <StatsMonth income={income} expense={expense} balance={income - expense} />
 
       {bills.map(bill => (
         <BillItem key={bill.id} bill={bill} />
@@ -63,5 +76,3 @@ const ListBills = () => {
     </div>
   );
 };
-
-export default ListBills;

@@ -64,32 +64,41 @@
 }
 
 .react-datepicker__input-container {
-font-size: 1rem;
-padding-left: 1rem;
-padding-right: 1rem;
+/* font-size: 1rem;
 height: 2.5rem;
 border-radius: 0.25rem;
 border: 1px solid;
-border-color: var(--light-gray);
-}
-.react-datapicker__input-text {
-  background-color: transparent;
-}
+border-color: var(--light-gray); */
 
-.react-datepicker__input-container:hover {
-border-color: var(--gray)
-}
-.react-datepicker__input-container:focus-within {
-z-index: 1;
-border-color: var(--blue600);
-border-width: 1.5px;
-box-shadow: 0 0 0 1px var(--blue600);
 }
 
 .react-datepicker__input-container > input {
-width: 100%;
-height: 100%;
-outline: 0;
+  width: 100%;
+  min-width: 0px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  position: relative;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
+  transition-property: var(--chakra-transition-property-common);
+  transition-duration: var(--chakra-transition-duration-normal);
+  font-size: var(--chakra-fontSizes-md);
+  -webkit-padding-start: var(--chakra-space-4);
+  padding-inline-start: var(--chakra-space-4);
+  -webkit-padding-end: var(--chakra-space-4);
+  padding-inline-end: var(--chakra-space-4);
+  height: var(--chakra-sizes-10);
+  border-radius: var(--chakra-radii-md);
+  border: 1px solid var(--chakra-colors-whiteAlpha-300);
+  background: transparent;
+  
+  &:focus {
+    z-index: 1;
+    border-color: #63b3ed;
+    box-shadow: 0 0 0 1px #63b3ed;
+  }
 }
 
 .react-datepicker__navigation--next--with-time:not(.react-datepicker__navigation--next--with-today-button) {
@@ -98,7 +107,7 @@ right: 90px;
 
 .react-datepicker__navigation--previous,
 .react-datepicker__navigation--next {
-height: 8px;
+height: 45px;
 }
 
 .react-datepicker__navigation--previous {

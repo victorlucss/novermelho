@@ -14,6 +14,7 @@ import {
   useDisclosure,
   BoxProps,
   FlexProps,
+  Badge,
 } from '@chakra-ui/react';
 import { FiHome, FiPower, FiTrendingUp, FiMenu } from 'react-icons/fi';
 import { IconType } from 'react-icons';
@@ -80,6 +81,11 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="center">
         <Image src="/logo.png" width={35} height={35} />
+        <Flex height="14px" ml={2}>
+          <Badge variant="outline" fontSize="xx-small" colorScheme="green">
+            Beta
+          </Badge>
+        </Flex>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map(({ name, icon, link }) => (
@@ -146,10 +152,13 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
     >
       <IconButton variant="outline" onClick={onOpen} aria-label="open menu" icon={<FiMenu />} />
 
-      <Flex ml={5}>
-        <Link href="/">
-          <Image src="/logo.png" width={35} height={35} />
-        </Link>
+      <Flex ml={5} height="35px" alignItems="center">
+        <Image src="/logo.png" width={35} height={35} />
+        <Flex height="14px" ml={2}>
+          <Badge variant="outline" fontSize="xx-small" colorScheme="green">
+            Beta
+          </Badge>
+        </Flex>
       </Flex>
     </Flex>
   );

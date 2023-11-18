@@ -7,7 +7,7 @@ import theme from '@Configs/theme';
 import { UserProvider } from '@Modules/Authentication/context/UserContext';
 
 import 'react-datepicker/dist/react-datepicker.css';
-import './styles.css';
+import './styles.scss';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

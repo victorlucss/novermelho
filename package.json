@@ -8,9 +8,6 @@
     "start": "next start",
     "lint": "eslint \"**/*.{ts,tsx}\""
   },
-  "engines": {
-    "node": ">=16 <17"
-  },
   "dependencies": {
     "@chakra-ui/button": "^1.4.2",
     "@chakra-ui/icons": "^1.0.15",
@@ -40,6 +37,7 @@
     "eslint-import-resolver-babel-module": "^5.3.1",
     "eslint-plugin-prettier": "^3.4.0",
     "prettier": "^2.3.2",
+    "sass": "^1.69.5",
     "typescript": "^4.3.5"
   }
 }

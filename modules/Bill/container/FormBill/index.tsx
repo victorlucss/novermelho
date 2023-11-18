@@ -107,22 +107,29 @@ const FormBill = ({ billId }: FormBillProps) => {
 
   const types = [
     {
-      label: 'Expense',
+      label: 'Despesa',
       value: BillTypes.EXPENSE,
     },
     {
-      label: 'Income',
+      label: 'Receita',
       value: BillTypes.INCOME,
     },
   ];
 
   return (
-    <Box title="Create new bill" margin="10px" padding="10px" borderWidth="1px" borderRadius="lg">
+    <Box
+      title="Criar nova conta"
+      description="Adicione uma nova despesa agora e mantenha o controle total do seu orçamento!"
+      margin="10px"
+      padding="10px"
+      borderWidth="1px"
+      borderRadius="lg"
+    >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Flex direction="column" alignItems="flex-start">
           <Input
             name="name"
-            label="Billing name"
+            label="Título"
             {...register('name', { required: true })}
             error={errors.name?.message}
             marginBottom="10px"
@@ -130,7 +137,7 @@ const FormBill = ({ billId }: FormBillProps) => {
 
           <Input
             name="description"
-            label="Billing description"
+            label="Descrição"
             {...register('description')}
             error={errors.description?.message}
             marginBottom="10px"
@@ -142,7 +149,7 @@ const FormBill = ({ billId }: FormBillProps) => {
             render={({ field }) => (
               <DatePicker
                 name="dueDate"
-                label="Bill Due Date"
+                label="Data de vencimento"
                 onChange={date => field.onChange(date)}
                 selected={field.value}
                 style={{ marginBottom: '10px' }}
@@ -152,7 +159,7 @@ const FormBill = ({ billId }: FormBillProps) => {
 
           <Select
             name="type"
-            label="Type"
+            label="Tipo"
             options={types}
             {...register('type')}
             error={errors.type?.message}
@@ -161,7 +168,7 @@ const FormBill = ({ billId }: FormBillProps) => {
 
           <MoneyInput
             name="value"
-            label="Billing value"
+            label="Valor"
             {...register('value')}
             error={errors.value?.message}
             marginBottom="10px"
