@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@chakra-ui/button';
-import { useToast, Flex, useRadioGroup, HStack, Text } from '@chakra-ui/react';
+import { useToast, Flex, useRadioGroup, Stack, Text, Spacer } from '@chakra-ui/react';
 
 import { billsCollection } from '@Modules/Bill/constants/FirestoreCollections';
 import { Bill } from '@Modules/Bill/interfaces/Bill.interface';
@@ -10,6 +10,16 @@ import { BillTypes, BillStatus } from '@Modules/Bill/constants/Types';
 import { Input, MoneyInput, Select, DatePicker, Box, RadioCard, If } from '@Components';
 import { useUser } from '@Modules/Authentication/context/UserContext';
 
+const types = [
+  {
+    label: 'Despesa',
+    value: BillTypes.EXPENSE,
+  },
+  {
+    label: 'Receita',
+    value: BillTypes.INCOME,
+  },
+];
 interface FormBillProps {
   billId?: string;
 }
@@ -38,7 +48,17 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
     onChange: category => setValue('category', category),
   });
 
+  useEffect(() => {
+    try {
+      const queryBillType = router.query?.type as keyof typeof BillTypes;
+      setValue('type', queryBillType);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [router.query.type, setValue]);
+
   const group = getRootProps();
+
   const onSubmit = async values => {
     if (!userId) return;
 
@@ -103,20 +123,23 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
     setValue('category', foundBill?.category);
   }, [foundBill, setValue]);
 
-  const types = [
-    {
-      label: 'Despesa',
-      value: BillTypes.EXPENSE,
-    },
-    {
-      label: 'Receita',
-      value: BillTypes.INCOME,
-    },
-  ];
   const billType = watch('type', false);
+
+  const title = useMemo(() => {
+    const prefix = billId ? 'Editar' : 'Criar nova';
+    if (router.query.type) {
+      const foundType = types.find(type => type.value === router.query.type);
+
+      if (!foundType) return `${prefix} conta`;
+
+      return `${prefix} ${foundType.label.toLocaleLowerCase()}`;
+    }
+
+    return `${prefix} conta`;
+  }, [billId, router.query.type]);
   return (
     <Box
-      title="Criar nova conta"
+      title={title}
       description={billId ? '' : 'Adicione uma nova despesa agora e mantenha o controle total do seu orçamento!'}
       margin="10px"
       padding="10px"
@@ -156,14 +179,16 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
             )}
           />
 
-          <Select
-            name="type"
-            label="Tipo"
-            options={types}
-            {...register('type')}
-            error={errors.type?.message}
-            marginBottom="10px"
-          />
+          <If condition={!router.query?.type}>
+            <Select
+              name="type"
+              label="Tipo"
+              options={types}
+              {...register('type')}
+              error={errors.type?.message}
+              marginBottom="10px"
+            />
+          </If>
 
           <MoneyInput
             name="value"
@@ -178,7 +203,7 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
               <Text fontWeight="500" fontSize="1rem" mb="0.75rem">
                 Categoria
               </Text>
-              <HStack {...group} mb="10px">
+              <Stack spacing={2} direction="row" wrap="wrap">
                 {categoriesExpense.map(value => {
                   const radio = getRadioProps({ value });
                   return (
@@ -187,7 +212,7 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
                     </RadioCard>
                   );
                 })}
-              </HStack>
+              </Stack>
             </>
           </If>
 

@@ -16,11 +16,9 @@ import {
   FlexProps,
   Badge,
 } from '@chakra-ui/react';
-import { FiHome, FiPower, FiTrendingUp, FiMenu } from 'react-icons/fi';
+import { FiHome, FiPower, FiTrendingUp, FiTrendingDown, FiMenu } from 'react-icons/fi';
 import { IconType } from 'react-icons';
 import Image from 'next/image';
-
-import { auth } from '@Configs/Firebase';
 
 interface LinkItemProps {
   name: string;
@@ -29,7 +27,8 @@ interface LinkItemProps {
 }
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Início', icon: FiHome, link: '/' },
-  { name: 'Criar conta', icon: FiTrendingUp, link: '/bill' },
+  { name: 'Criar receita', icon: FiTrendingUp, link: '/bill?type=INCOME' },
+  { name: 'Criar despesa', icon: FiTrendingDown, link: '/bill?type=EXPENSE' },
   {
     name: 'Sair',
     icon: FiPower,
