@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { Button, IconButton, Box, Text, Tag, Flex, Stack, Spacer } from '@chakra-ui/react';
-import { EditIcon, DeleteIcon, ArrowUpIcon, ArrowDownIcon } from '@chakra-ui/icons';
+import { Button, IconButton, Box, Text, Tag, Flex, Stack, Center } from '@chakra-ui/react';
+import { EditIcon, DeleteIcon, ArrowUpIcon, ArrowDownIcon, InfoIcon, WarningTwoIcon } from '@chakra-ui/icons';
 
 import { BillTypes, BillStatus } from '@Modules/Bill/constants/Types';
 import { Bill } from '@Modules/Bill/interfaces/Bill.interface';
@@ -11,7 +11,7 @@ interface BillItemProps {
   bill: Bill;
 }
 
-export default function BillItem({ bill }: BillItemProps) {
+export const BillItem = ({ bill }: BillItemProps) => {
   const router = useRouter();
   const [loadings, setLoadings] = useState({
     changingStatus: null,
@@ -75,30 +75,78 @@ export default function BillItem({ bill }: BillItemProps) {
     });
   };
 
+  const isExpiring = useMemo(() => {
+    const currentDate = new Date();
+
+    currentDate.setDate(currentDate.getDate() + 5);
+
+    return (
+      currentDate.getTime() - bill.dueDate >= 0 && bill.status !== BillStatus.PAID && bill.type === BillTypes.EXPENSE
+    );
+  }, [bill.dueDate, bill.status, bill.type]);
+
+  const isPassDueDate = useMemo(() => {
+    return new Date(bill.dueDate) < new Date() && bill.status !== BillStatus.PAID && bill.type === BillTypes.EXPENSE;
+  }, [bill.dueDate, bill.status, bill.type]);
+
+  const billSituation = useMemo(() => {
+    console.log('isPassDueDate', isPassDueDate);
+    if (isPassDueDate) {
+      return (
+        <Box bg="red.600" w="130px" pb={2} pt={2} mb={5} borderRadius={3}>
+          <Center>
+            <WarningTwoIcon color="white" />
+            <Text color="white" fontSize="x-small" ml={1} fontWeight="bold">
+              Conta vencida
+            </Text>
+          </Center>
+        </Box>
+      );
+    }
+
+    if (isExpiring) {
+      return (
+        <Box bg="yellow.600" w="130px" pb={2} pt={2} mb={5} borderRadius={3}>
+          <Center>
+            <InfoIcon color="white" />
+            <Text color="white" fontSize="x-small" ml={1} fontWeight="bold">
+              Prestes a expirar
+            </Text>
+          </Center>
+        </Box>
+      );
+    }
+  }, [isExpiring, isPassDueDate]);
+
+  const itemBorderColor = useMemo(() => {
+    if (isPassDueDate) return 'red.500';
+    if (isExpiring) return 'yellow.500';
+
+    return '';
+  }, [isExpiring, isPassDueDate]);
+
   return (
-    <Box w="100%" p={4} marginBottom="10px" borderWidth="1px" borderRadius="lg">
+    <Box w="100%" p={4} marginBottom="10px" borderWidth="1px" borderRadius="lg" borderColor={itemBorderColor}>
+      {billSituation}
+
       <Flex direction="row" justifyContent="space-between" alignItems="center">
-        <Stack spacing="3">
-          <Flex direction="row" alignItems="center">
-            <Text fontSize="xl" as="b">
+        <Stack spacing="1">
+          <Flex direction="column" alignItems="flex-start">
+            <Text fontSize="md" as="b">
               {bill.name}
             </Text>
-            <Text fontSize="sm" color="gray.300" marginLeft="10px">
-              Due date {formatDate(bill.dueDate)}
+            <Text fontSize="xx-small" color="gray.600">
+              Vencimento {formatDate(bill.dueDate)}
             </Text>
           </Flex>
 
           {bill.description && (
-            <Text fontSize="sm" color="gray.300">
+            <Text fontSize="small" color="gray.300">
               {bill.description}
             </Text>
           )}
 
           <div>{billValue}</div>
-
-          <Text fontSize="xs" color="gray">
-            Created at {formatDate(bill.createdAt)}
-          </Text>
         </Stack>
 
         <Flex alignItems="center">
@@ -110,7 +158,7 @@ export default function BillItem({ bill }: BillItemProps) {
               isLoading={loadings?.changingStatus === BillStatus.PENDING}
               colorScheme="yellow"
             >
-              Pending
+              Pendente
             </Button>
 
             <Button
@@ -121,7 +169,7 @@ export default function BillItem({ bill }: BillItemProps) {
               colorScheme="green"
               marginTop="5px"
             >
-              Paid
+              Pago
             </Button>
 
             <Button
@@ -132,12 +180,12 @@ export default function BillItem({ bill }: BillItemProps) {
               colorScheme="red"
               marginTop="5px"
             >
-              Not paid
+              Nõa pago
             </Button>
           </Flex>
 
           <IconButton
-            aria-label="Edit bill"
+            aria-label="Editar conta"
             icon={<EditIcon />}
             onClick={() => router.push(`/bill/${bill.id}`)}
             variant="outline"
@@ -145,7 +193,7 @@ export default function BillItem({ bill }: BillItemProps) {
           />
 
           <IconButton
-            aria-label="Delete bill"
+            aria-label="Deletar conta"
             colorScheme="red"
             color="red.500"
             onClick={() => deleteBill()}
@@ -158,4 +206,4 @@ export default function BillItem({ bill }: BillItemProps) {
       </Flex>
     </Box>
   );
-}
+};

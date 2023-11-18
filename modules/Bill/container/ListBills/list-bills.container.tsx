@@ -3,7 +3,7 @@ import { useToast } from '@chakra-ui/react';
 
 import { billsCollection } from '@Modules/Bill/constants/FirestoreCollections';
 import { Bill } from '@Modules/Bill/interfaces/Bill.interface';
-import BillItem from '@Modules/Bill/components/BillItem';
+import { BillItem } from '@Modules/Bill/components/BillItem/bill-item.component';
 import BillFilters from '@Modules/Bill/components/BillFilters';
 import { StatsMonth } from '@Modules/Bill/components/StatsMonth/stats-month.component';
 import { useUser } from '@Modules/Authentication/context/UserContext';

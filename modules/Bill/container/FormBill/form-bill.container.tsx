@@ -14,7 +14,7 @@ interface FormBillProps {
   billId?: string;
 }
 
-const FormBill = ({ billId }: FormBillProps) => {
+export const FormBillContainer = ({ billId }: FormBillProps) => {
   const {
     handleSubmit,
     register,
@@ -35,7 +35,6 @@ const FormBill = ({ billId }: FormBillProps) => {
     const dueDate = new Date(values.dueDate);
     dueDate.setHours(3, 0, 0, 0);
 
-    console.log(values);
     const bill: Bill = {
       name: values.name,
       description: values.description ?? '',
@@ -54,7 +53,7 @@ const FormBill = ({ billId }: FormBillProps) => {
         await billsCollection.add(bill);
       }
       toast({
-        description: 'Bill successful submited!',
+        description: 'Conta criada com sucesso!',
         status: 'success',
       });
 
@@ -72,38 +71,24 @@ const FormBill = ({ billId }: FormBillProps) => {
       if (billDoc.exists) {
         setFoundBill({ id: billDoc.id, ...billDoc.data() } as Bill);
       } else {
+        router.push('/');
         toast({
-          description: 'Bill not found!',
+          description: 'Conta não encontrada!',
           status: 'error',
         });
       }
     };
 
     findBill();
-  }, [billId, toast]);
+  }, [billId, router, toast]);
 
   useEffect(() => {
-    console.log(foundBill);
     setValue('name', foundBill?.name);
     setValue('description', foundBill?.description);
     setValue('dueDate', foundBill?.dueDate);
     setValue('type', foundBill?.type);
     setValue('value', String(foundBill?.value));
   }, [foundBill, setValue]);
-
-  const years = useMemo(() => {
-    const finalYears = [];
-    const beginYear = 2020;
-
-    for (let yearCount = 0; yearCount < 5; yearCount++) {
-      finalYears.push({
-        value: beginYear + yearCount,
-        label: `${beginYear + yearCount}`,
-      });
-    }
-
-    return finalYears;
-  }, []);
 
   const types = [
     {
@@ -119,7 +104,7 @@ const FormBill = ({ billId }: FormBillProps) => {
   return (
     <Box
       title="Criar nova conta"
-      description="Adicione uma nova despesa agora e mantenha o controle total do seu orçamento!"
+      description={billId ? '' : 'Adicione uma nova despesa agora e mantenha o controle total do seu orçamento!'}
       margin="10px"
       padding="10px"
       borderWidth="1px"
@@ -152,6 +137,7 @@ const FormBill = ({ billId }: FormBillProps) => {
                 label="Data de vencimento"
                 onChange={date => field.onChange(date)}
                 selected={field.value}
+                defaultValue={new Date().getTime()}
                 style={{ marginBottom: '10px' }}
               />
             )}
@@ -175,12 +161,10 @@ const FormBill = ({ billId }: FormBillProps) => {
           />
 
           <Button type="submit" isLoading={isSubmitting}>
-            Submit
+            {billId ? 'Editar' : 'Criar'}
           </Button>
         </Flex>
       </form>
     </Box>
   );
 };
-
-export default FormBill;

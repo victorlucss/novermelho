@@ -1,10 +1,10 @@
-import FormBill from '@Modules/Bill/container/FormBill';
+import { FormBillContainer } from '@Modules/Bill/container/FormBill/form-bill.container';
 import { LateralMenu } from '@Components';
 
 export default function NewBillPage() {
   return (
     <LateralMenu>
-      <FormBill />
+      <FormBillContainer />
     </LateralMenu>
   );
 }
