@@ -134,7 +134,9 @@ export const CopyBill = ({ isOpen, onClose, billId }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button variant="ghost">Cancelar</Button>
+            <Button variant="ghost" onClick={onClose}>
+              Cancelar
+            </Button>
             <Button colorScheme="blue" mr={3} onClick={handleSubmit(onSubmit)} isLoading={isSubmitting}>
               Copiar conta
             </Button>
