@@ -39,6 +39,11 @@
   --blue200: #edf2f7;
   --blue100: #f7fafc;
 }
+
+html {
+  height: 100%;
+}
+
 .react-datepicker {
 	font-family: unset;
 	font-size: 0.9rem;

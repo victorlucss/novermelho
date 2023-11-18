@@ -28,10 +28,10 @@ interface LinkItemProps {
   link: string;
 }
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'Home', icon: FiHome, link: '/' },
-  { name: 'Create bill', icon: FiTrendingUp, link: '/bill' },
+  { name: 'Início', icon: FiHome, link: '/' },
+  { name: 'Criar conta', icon: FiTrendingUp, link: '/bill' },
   {
-    name: 'Logout',
+    name: 'Sair',
     icon: FiPower,
     link: '/logout',
   },
