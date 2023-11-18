@@ -2,7 +2,6 @@ import {
   FormControl,
   FormLabel,
   FormErrorMessage,
-  NumberInputProps,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
@@ -24,8 +23,8 @@ export const MoneyInput = forwardRef<HTMLInputElement, MoneyInputProps>(
       <FormControl id={name} isInvalid={!!error} {...rest}>
         {label && <FormLabel>{label}</FormLabel>}
 
-        <NumberInput name={name} ref={ref as LegacyRef<HTMLInputElement>}>
-          <NumberInputField />
+        <NumberInput name={name}>
+          <NumberInputField ref={ref as LegacyRef<HTMLInputElement>} />
           <NumberInputStepper>
             <NumberIncrementStepper />
             <NumberDecrementStepper />

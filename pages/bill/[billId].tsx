@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
 
 import FormBill from '@Modules/Bill/container/FormBill';
+import withLateralMenu from '@/hoc/withLateralMenu';
 
-export default function EditBillPage() {
+const EditBillPage = () => {
   const router = useRouter();
   const billId: string = String(router.query.billId);
   return (
@@ -10,4 +11,6 @@ export default function EditBillPage() {
       <FormBill billId={billId} />
     </div>
   );
-}
+};
+
+export default withLateralMenu(EditBillPage);

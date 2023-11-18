@@ -1,6 +1,6 @@
 import React, { HTMLAttributes } from 'react';
-import { FormControl, FormLabel, FormErrorMessage, useColorMode } from '@chakra-ui/react';
 import ReactDatePicker from 'react-datepicker';
+import { FormControl, FormLabel, FormErrorMessage, useColorMode } from '@chakra-ui/react';
 
 interface Props {
   isClearable?: boolean;
@@ -28,14 +28,13 @@ export const DatePicker = ({
   return (
     <FormControl id={name} isInvalid={!!error} {...rest}>
       {label && <FormLabel>{label}</FormLabel>}
-      <div className={`react-datepicker ${isLight ? 'light-theme' : 'dark-theme'}`}>
+      <div className={`${isLight ? 'light-theme' : 'dark-theme'}`}>
         <ReactDatePicker
           dateFormat="dd/MM/yyyy"
           selected={selected}
           onChange={onChange}
           isClearable={isClearable}
           showPopperArrow={showPopperArrow}
-          // className="react-datapicker__input-text" //input is white by default and there is no already defined class for it so I created a new one
         />
       </div>
       {error && <FormErrorMessage>{error}</FormErrorMessage>}

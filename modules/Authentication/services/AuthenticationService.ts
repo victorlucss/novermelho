@@ -1,4 +1,4 @@
-import { auth } from '@Configs/Firebase';
+import { auth, googleProvider } from '@Configs/Firebase';
 
 import User from '../interfaces/User.interface';
 
@@ -25,5 +25,9 @@ export default class AuthenticationService {
 
   static forgotPassword(email: string): Promise<boolean> {
     return auth.sendPasswordResetEmail(email).then(_ => true);
+  }
+
+  static signInWithGoogle() {
+    return auth.signInWithPopup(googleProvider);
   }
 }

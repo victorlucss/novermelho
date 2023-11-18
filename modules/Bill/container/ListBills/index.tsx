@@ -20,22 +20,27 @@ const ListBills = () => {
   const loadBills = useCallback(() => {
     if (!userId) return;
 
+    const { year, month } = filters;
+    const startDate = new Date(year, month, 1);
+    const endDate = new Date(year, month + 1, 0);
+
     billsCollection
       .where('userId', '==', userId)
-      .where('year', '==', filters?.year)
-      .where('month', '==', filters?.month)
+      .where('dueDate', '>=', startDate.getTime())
+      .where('dueDate', '<=', endDate.getTime())
       .onSnapshot(({ docs }) => {
+        console.log('docs', docs, filters, startDate, endDate);
         setBills(docs.map(bill => ({ id: bill.id, ...bill.data() } as Bill)));
       });
-  }, [filters]);
+  }, [filters, userId]);
 
   useEffect(() => {
     loadBills();
-  }, [filters]);
+  }, [filters, loadBills]);
 
   useEffect(() => {
     loadBills();
-  }, []);
+  }, [loadBills]);
 
   const onChange = (target, value) => {
     setFilters(oldFilters => ({

@@ -1,9 +1,10 @@
 import { useForm } from 'react-hook-form';
-import { Button } from '@chakra-ui/button';
+import { Button, IconButton } from '@chakra-ui/button';
 import { Flex, Box, useToast, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import { FcGoogle } from 'react-icons/fc';
 
 import AuthenticationService from '@Authentication/services/AuthenticationService';
 import User from '@Authentication/interfaces/User.interface';
@@ -24,7 +25,7 @@ const FormLogin = () => {
     if (userId) {
       Router.replace('/');
     }
-  }, [userId]);
+  }, [Router, userId]);
 
   const onSubmit = async values => {
     try {
@@ -41,51 +42,31 @@ const FormLogin = () => {
     }
   };
 
-  return (
-    <Box margin="10px" padding="10px" borderRadius="lg" maxW={450} bg="white" p="8">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Flex direction="column" alignItems="flex-start">
-          <Input
-            type="email"
-            name="email"
-            label="Email"
-            {...register('email', { required: true })}
-            error={errors.email?.message}
-            marginBottom="10px"
-          />
-          <Box w="100%">
-            <Input
-              type="password"
-              name="password"
-              label="Password"
-              {...register('password')}
-              error={errors.password?.message}
-              marginBottom="10px"
-            />
-            <Box textAlign="left" mt="-2">
-              <Link passHref href="forgot">
-                <Button variant="link" fontSize="smaller">
-                  Forgot password
-                </Button>
-              </Link>
-            </Box>
-          </Box>
+  const onLoginWithGoogle = async values => {
+    try {
+      const res = await AuthenticationService.signInWithGoogle();
+      console.log(res);
+      const { uid } = res.user;
+      if (uid) {
+        setUserId(uid);
+        Router.replace('/');
+      }
+    } catch (err) {
+      toast({
+        description: err.message,
+        status: 'error',
+      });
+    }
+  };
 
-          <Box w="100%" mt="4">
-            <Button type="submit" colorScheme="red" isFullWidth isLoading={isSubmitting}>
-              Login
-            </Button>
-            <Flex flex="1" justify="center" mt="4">
-              <Text>Not registered yet?</Text>
-              <Link passHref href="signup">
-                <Button variant="link" marginLeft="10px">
-                  Sign up here
-                </Button>
-              </Link>
-            </Flex>
-          </Box>
-        </Flex>
-      </form>
+  return (
+    <Box margin="10px" padding="10px" borderRadius="lg" maxW={450} p="8">
+      <Button onClick={onLoginWithGoogle} variant="outline" marginLeft="10px">
+        <Flex mr={2}>
+          <FcGoogle />
+        </Flex>{' '}
+        Sign in with Google
+      </Button>
     </Box>
   );
 };

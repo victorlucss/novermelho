@@ -2,28 +2,13 @@ import { useMemo, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@chakra-ui/button';
-import { useToast, Flex, Spacer, Box } from '@chakra-ui/react';
+import { useToast, Flex } from '@chakra-ui/react';
 
 import { billsCollection } from '@Modules/Bill/constants/FirestoreCollections';
 import { Bill } from '@Modules/Bill/interfaces/Bill.interface';
 import { BillTypes, BillStatus } from '@Modules/Bill/constants/Types';
-import { Input, MoneyInput, Select, DatePicker } from '@Components';
+import { Input, MoneyInput, Select, DatePicker, Box } from '@Components';
 import { useUser } from '@Modules/Authentication/context/UserContext';
-
-const MONTHS_DICT = {
-  0: 'Janeiro',
-  1: 'Fevereiro',
-  2: 'Março',
-  3: 'Abril',
-  4: 'Maio',
-  5: 'Junho',
-  6: 'Julho',
-  7: 'Agosto',
-  8: 'Setembro',
-  9: 'Outubro',
-  10: 'Novembro',
-  11: 'Dezembro',
-};
 
 interface FormBillProps {
   billId?: string;
@@ -50,14 +35,13 @@ const FormBill = ({ billId }: FormBillProps) => {
     const dueDate = new Date(values.dueDate);
     dueDate.setHours(3, 0, 0, 0);
 
+    console.log(values);
     const bill: Bill = {
       name: values.name,
       description: values.description ?? '',
       value: Number(values.value),
       dueDate: dueDate.getTime(),
-      year: +values.year,
       status: billId ? foundBill?.status : BillStatus.PENDING,
-      month: +values.month,
       type: values.type,
       createdAt: new Date().getTime(),
       userId,
@@ -99,13 +83,13 @@ const FormBill = ({ billId }: FormBillProps) => {
   }, [billId, toast]);
 
   useEffect(() => {
+    console.log(foundBill);
     setValue('name', foundBill?.name);
+    setValue('description', foundBill?.description);
     setValue('dueDate', foundBill?.dueDate);
-    setValue('year', foundBill?.year);
-    setValue('month', foundBill?.month);
     setValue('type', foundBill?.type);
-    setValue('value', foundBill?.value);
-  }, [foundBill]);
+    setValue('value', String(foundBill?.value));
+  }, [foundBill, setValue]);
 
   const years = useMemo(() => {
     const finalYears = [];
@@ -121,19 +105,6 @@ const FormBill = ({ billId }: FormBillProps) => {
     return finalYears;
   }, []);
 
-  const months = useMemo(() => {
-    const finalMonths = [];
-
-    for (let monthCount = 0; monthCount <= 11; monthCount++) {
-      finalMonths.push({
-        label: `${MONTHS_DICT[monthCount]}`,
-        value: monthCount,
-      });
-    }
-
-    return finalMonths;
-  }, []);
-
   const types = [
     {
       label: 'Expense',
@@ -146,7 +117,7 @@ const FormBill = ({ billId }: FormBillProps) => {
   ];
 
   return (
-    <Box margin="10px" padding="10px" borderWidth="1px" borderRadius="lg">
+    <Box title="Create new bill" margin="10px" padding="10px" borderWidth="1px" borderRadius="lg">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Flex direction="column" alignItems="flex-start">
           <Input
@@ -177,24 +148,6 @@ const FormBill = ({ billId }: FormBillProps) => {
                 style={{ marginBottom: '10px' }}
               />
             )}
-          />
-
-          <Select
-            name="year"
-            label="Year"
-            options={years}
-            {...register('year')}
-            error={errors.year?.message}
-            marginBottom="10px"
-          />
-
-          <Select
-            name="month"
-            label="Month"
-            options={months}
-            {...register('month')}
-            error={errors.month?.message}
-            marginBottom="10px"
           />
 
           <Select
