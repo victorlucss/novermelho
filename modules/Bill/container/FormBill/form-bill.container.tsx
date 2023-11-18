@@ -20,6 +20,8 @@ const types = [
     value: BillTypes.INCOME,
   },
 ];
+
+const categoriesExpense = ['💳 Cartão de crédito', '💰 Investimento', '💸 Fixo', '🔁 Flexível', '💲 Outro'];
 interface FormBillProps {
   billId?: string;
 }
@@ -40,8 +42,6 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
 
   const [foundBill, setFoundBill] = useState<Bill | undefined>();
 
-  const categoriesExpense = ['💳 Cartão de crédito', '💰 Investimento', '💸 Fixo', '🔁 Flexível', '💲 Outro'];
-
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'category',
     defaultValue: categoriesExpense[0],
@@ -56,6 +56,10 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
       console.error(error);
     }
   }, [router.query.type, setValue]);
+
+  useEffect(() => {
+    setValue('category', categoriesExpense[0]);
+  }, [setValue]);
 
   const group = getRootProps();
 

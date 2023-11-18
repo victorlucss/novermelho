@@ -106,7 +106,7 @@ export const CopyBill = ({ isOpen, onClose, billId }) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent maxW="95vw" margin="auto">
           <ModalHeader>Copiar conta</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
