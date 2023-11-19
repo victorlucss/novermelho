@@ -27,10 +27,11 @@ const recurrenceTypes = [
     label: 'Cada mês',
     value: 'EVERY_MONTH',
   },
-  {
-    label: 'Cada ano',
-    value: 'EVERY_YEAR',
-  },
+  // TODO: every year recurrence
+  //  {
+  //    label: 'Cada ano',
+  //    value: 'EVERY_YEAR',
+  //  },
 ];
 
 const categoriesExpense = [

@@ -116,7 +116,6 @@ export const BillItem = ({ bill, onCopyBill }: BillItemProps) => {
   }, [bill.dueDate, bill.status, bill.type]);
 
   const billSituation = useMemo(() => {
-    console.log('isPassDueDate', isPassDueDate);
     if (isPassDueDate) {
       return (
         <Box bg="red.600" w="130px" pb={2} pt={2} mb={5} borderRadius={3}>
@@ -172,16 +171,9 @@ export const BillItem = ({ bill, onCopyBill }: BillItemProps) => {
       <Flex direction="row" justifyContent="space-between" alignItems="center">
         <Stack spacing="1">
           <Flex direction="column" alignItems="flex-start">
-            <Flex alignItems="center">
-              <Text fontSize="md" as="b">
-                {bill.name}
-              </Text>
-              <If condition={bill.type === BillTypes.EXPENSE && !!bill.category}>
-                <Text fontSize="xx-small" ml={1}>
-                  ({bill.category})
-                </Text>
-              </If>
-            </Flex>
+            <Text fontSize="md" as="b">
+              {bill.name}
+            </Text>
             <Text fontSize="xx-small" color="gray.600">
               Vencimento {formatDate(bill.dueDate)}
             </Text>
