@@ -21,7 +21,7 @@ const FormLogin = () => {
   const onLoginWithGoogle = async values => {
     try {
       const res = await AuthenticationService.signInWithGoogle();
-      console.log(res);
+
       const { uid } = res.user;
       if (uid) {
         setUserId(uid);

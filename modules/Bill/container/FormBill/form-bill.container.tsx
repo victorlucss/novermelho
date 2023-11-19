@@ -203,8 +203,6 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
     return `${prefix} conta`;
   }, [billId, router.query.type]);
 
-  console.log(errors);
-
   return (
     <Box
       title={title}

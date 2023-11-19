@@ -88,23 +88,6 @@ export const BillItem = ({ bill, onCopyBill, onDeleteBill }: BillItemProps) => {
     });
   };
 
-  const deleteBill = async () => {
-    const hasRecurrence = await (await billsRecurrenceCollection.where('bills', 'array-contains', bill.id)).get();
-
-    console.log(bill.id, hasRecurrence);
-    //    setLoadings({
-    //      ...loadings,
-    //      deleting: true,
-    //    });
-    //
-    //    await billsCollection.doc(bill.id).delete();
-    //
-    //    setLoadings({
-    //      ...loadings,
-    //      changingStatus: false,
-    //    });
-  };
-
   const isExpiring = useMemo(() => {
     const currentDate = new Date();
 
