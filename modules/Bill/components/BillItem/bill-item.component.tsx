@@ -23,7 +23,7 @@ import { FaAngleDown } from 'react-icons/fa6';
 
 import { BillTypes, BillStatus } from '@Modules/Bill/constants/Types';
 import { Bill } from '@Modules/Bill/interfaces/Bill.interface';
-import { billsCollection } from '@Modules/Bill/constants/FirestoreCollections';
+import { billsCollection, billsRecurrenceCollection } from '@Modules/Bill/constants/FirestoreCollections';
 import { If } from '@Components';
 
 const textsBillStatus = {
@@ -35,9 +35,10 @@ const textsBillStatus = {
 interface BillItemProps {
   bill: Bill;
   onCopyBill: (billId: string) => void;
+  onDeleteBill: (billId: string) => void;
 }
 
-export const BillItem = ({ bill, onCopyBill }: BillItemProps) => {
+export const BillItem = ({ bill, onCopyBill, onDeleteBill }: BillItemProps) => {
   const router = useRouter();
   const [loadings, setLoadings] = useState({
     changingStatus: null,
@@ -88,17 +89,20 @@ export const BillItem = ({ bill, onCopyBill }: BillItemProps) => {
   };
 
   const deleteBill = async () => {
-    setLoadings({
-      ...loadings,
-      deleting: true,
-    });
+    const hasRecurrence = await (await billsRecurrenceCollection.where('bills', 'array-contains', bill.id)).get();
 
-    await billsCollection.doc(bill.id).delete();
-
-    setLoadings({
-      ...loadings,
-      changingStatus: false,
-    });
+    console.log(bill.id, hasRecurrence);
+    //    setLoadings({
+    //      ...loadings,
+    //      deleting: true,
+    //    });
+    //
+    //    await billsCollection.doc(bill.id).delete();
+    //
+    //    setLoadings({
+    //      ...loadings,
+    //      changingStatus: false,
+    //    });
   };
 
   const isExpiring = useMemo(() => {
@@ -298,7 +302,7 @@ export const BillItem = ({ bill, onCopyBill }: BillItemProps) => {
                     fontWeight="normal"
                     colorScheme="red"
                     fontSize="sm"
-                    onClick={() => deleteBill()}
+                    onClick={() => onDeleteBill(bill.id)}
                   >
                     Deletar conta
                   </Button>

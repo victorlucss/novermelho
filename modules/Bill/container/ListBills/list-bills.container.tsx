@@ -9,6 +9,7 @@ import { StatsMonth } from '@Modules/Bill/components/StatsMonth/stats-month.comp
 import { useUser } from '@Modules/Authentication/context/UserContext';
 import { BillTypes } from '@Modules/Bill/constants/Types';
 import { CopyBill } from '@Modules/Bill/components/CopyBill/copy-bill.component';
+import { DeleteBill } from '@Modules/Bill/components/DeleteBill/delete-bill.component';
 
 export const ListBillsContainer = () => {
   const { userId } = useUser();
@@ -21,6 +22,7 @@ export const ListBillsContainer = () => {
   const [billId, setBillId] = useState();
 
   const copyBillModal = useRef(false);
+  const deleteBillModal = useRef(false);
 
   const loadBills = useCallback(() => {
     if (!userId) return;
@@ -79,16 +81,27 @@ export const ListBillsContainer = () => {
     setBillId(undefined);
   };
 
+  const onDeleteBill = billId => {
+    deleteBillModal.current = true;
+    setBillId(billId);
+  };
+
+  const onCloseDeleteBill = () => {
+    deleteBillModal.current = false;
+    setBillId(undefined);
+  };
+
   return (
     <div>
       <CopyBill isOpen={copyBillModal.current} onClose={onCloseCopyBill} billId={billId} />
+      <DeleteBill isOpen={deleteBillModal.current} onClose={onCloseDeleteBill} billId={billId} />
       <BillFilters filters={filters} onChange={(target, value) => onChange(target, value)} from={2020} to={2024} />
 
       <StatsMonth income={income} expense={expense} balance={income - expense} isLoaded={isLoaded} />
 
       <Skeleton height="80px" isLoaded={isLoaded}>
         {bills.map(bill => (
-          <BillItem key={bill.id} bill={bill} onCopyBill={onCopyBill} />
+          <BillItem key={bill.id} bill={bill} onCopyBill={onCopyBill} onDeleteBill={onDeleteBill} />
         ))}
       </Skeleton>
     </div>

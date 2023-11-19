@@ -112,13 +112,12 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
       if (billId) {
         await billsCollection.doc(billId).update(bill);
       } else {
-        console.log(values);
         if (values.recurrence) {
+          let billsToAdd = [billsCollection.add(bill)];
           let endOcurrence = new Date(values.recurrenceDueDate);
           let indexOcurrence = new Date();
           indexOcurrence.setDate(endOcurrence.getDate());
 
-          let billsToAdd = [billsCollection.add(bill)];
           const billDateDay = new Date(bill.dueDate).getDate();
           while (endOcurrence >= indexOcurrence) {
             indexOcurrence.setMonth(indexOcurrence.getMonth() + 1);
@@ -136,11 +135,12 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
           await billsRecurrenceCollection.add({
             type: values.recurrenceType,
             ends_in: values.recurrenceDueDate,
-            bills: addedBills.map(({ id }) => `bills/${id}`),
+            bills: addedBills.map(({ id }) => id),
           });
 
+          router.push('/');
           return toast({
-            description: 'Conta e recorrência criados com sucesso!',
+            description: 'Conta e recorrências criados com sucesso!',
             status: 'success',
           });
         }
