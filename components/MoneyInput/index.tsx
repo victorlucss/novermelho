@@ -4,10 +4,9 @@ import {
   FormErrorMessage,
   NumberInput,
   NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   FormControlProps,
+  InputLeftAddon,
+  InputGroup,
 } from '@chakra-ui/react';
 import { forwardRef, LegacyRef } from 'react';
 
@@ -18,18 +17,17 @@ type MoneyInputProps = FormControlProps & {
 };
 
 export const MoneyInput = forwardRef<HTMLInputElement, MoneyInputProps>(
-  ({ name, label, error, ...rest }: MoneyInputProps, ref) => {
+  ({ name, label, error, isRequired, ...rest }: MoneyInputProps, ref) => {
     return (
       <FormControl id={name} isInvalid={!!error} {...rest}>
         {label && <FormLabel>{label}</FormLabel>}
 
-        <NumberInput name={name}>
-          <NumberInputField ref={ref as LegacyRef<HTMLInputElement>} />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
+        <InputGroup width="100%">
+          <InputLeftAddon>R$</InputLeftAddon>
+          <NumberInput name={name} width="100%">
+            <NumberInputField ref={ref as LegacyRef<HTMLInputElement>} borderLeftRadius={0} />
+          </NumberInput>
+        </InputGroup>
         {error && <FormErrorMessage>{error}</FormErrorMessage>}
       </FormControl>
     );
