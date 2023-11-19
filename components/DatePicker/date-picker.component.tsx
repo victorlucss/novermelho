@@ -11,6 +11,8 @@ interface Props {
   label?: string;
   error?: string;
   value?: string;
+  maxDate?: Date;
+  minDate?: Date;
 }
 
 export const DatePicker = ({
@@ -22,6 +24,8 @@ export const DatePicker = ({
   label,
   error,
   value,
+  maxDate,
+  minDate,
   ...rest
 }: Props & HTMLAttributes<HTMLElement>) => {
   const isLight = useColorMode().colorMode === 'light';
@@ -35,6 +39,9 @@ export const DatePicker = ({
           onChange={onChange}
           isClearable={isClearable}
           showPopperArrow={showPopperArrow}
+          maxDate={maxDate}
+          minDate={minDate}
+          className={!!error ? 'hasError' : ''}
         />
       </div>
       {error && <FormErrorMessage>{error}</FormErrorMessage>}
