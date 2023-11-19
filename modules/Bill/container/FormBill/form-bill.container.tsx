@@ -2,13 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@chakra-ui/button';
-import { useToast, Flex, useRadioGroup, Stack, Text, Spacer } from '@chakra-ui/react';
+import { useToast, Flex, Text, Switch } from '@chakra-ui/react';
 
-import { billsCollection } from '@Modules/Bill/constants/FirestoreCollections';
+import { billsCollection, billsRecurrenceCollection } from '@Modules/Bill/constants/FirestoreCollections';
 import { Bill } from '@Modules/Bill/interfaces/Bill.interface';
 import { BillTypes, BillStatus } from '@Modules/Bill/constants/Types';
-import { Input, MoneyInput, Select, DatePicker, Box, RadioCard, If } from '@Components';
+import { Input, MoneyInput, Select, DatePicker, Box, If } from '@Components';
 import { useUser } from '@Modules/Authentication/context/UserContext';
+import { defaultRequiredMessage, TO_YEAR } from '@Modules/Bill/constants/BillConsts';
 
 const types = [
   {
@@ -21,7 +22,40 @@ const types = [
   },
 ];
 
-const categoriesExpense = ['💳 Cartão de crédito', '💰 Investimento', '💸 Fixo', '🔁 Flexível', '💲 Outro'];
+const recurrenceTypes = [
+  {
+    label: 'Cada mês',
+    value: 'EVERY_MONTH',
+  },
+  {
+    label: 'Cada ano',
+    value: 'EVERY_YEAR',
+  },
+];
+
+const categoriesExpense = [
+  {
+    label: '💳 Cartão de crédito',
+    value: 'CREDIT_CARD',
+  },
+  {
+    label: '💰 Investimento',
+    value: 'INVESTING',
+  },
+  {
+    label: '💸 Fixo',
+    value: 'FIXED',
+  },
+  {
+    label: '🔁 Flexível',
+    value: 'FLEX',
+  },
+  {
+    label: '💲 Outro',
+    value: 'OTHER',
+  },
+];
+
 interface FormBillProps {
   billId?: string;
 }
@@ -42,12 +76,6 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
 
   const [foundBill, setFoundBill] = useState<Bill | undefined>();
 
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    name: 'category',
-    defaultValue: categoriesExpense[0],
-    onChange: category => setValue('category', category),
-  });
-
   useEffect(() => {
     try {
       const queryBillType = router.query?.type as keyof typeof BillTypes;
@@ -58,10 +86,8 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
   }, [router.query.type, setValue]);
 
   useEffect(() => {
-    setValue('category', categoriesExpense[0]);
+    setValue('category', categoriesExpense[0].value);
   }, [setValue]);
-
-  const group = getRootProps();
 
   const onSubmit = async values => {
     if (!userId) return;
@@ -72,7 +98,7 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
     const bill: Bill = {
       name: values.name,
       description: values.description ?? '',
-      value: Number(values.value),
+      value: +values.value,
       dueDate: dueDate.getTime(),
       status: billId ? foundBill?.status : BillStatus.PENDING,
       type: values.type,
@@ -85,6 +111,39 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
       if (billId) {
         await billsCollection.doc(billId).update(bill);
       } else {
+        console.log(values);
+        if (values.recurrence) {
+          let endOcurrence = new Date(values.recurrenceDueDate);
+          let indexOcurrence = new Date();
+          indexOcurrence.setDate(endOcurrence.getDate());
+
+          let billsToAdd = [billsCollection.add(bill)];
+          const billDateDay = new Date(bill.dueDate).getDate();
+          while (endOcurrence >= indexOcurrence) {
+            indexOcurrence.setMonth(indexOcurrence.getMonth() + 1);
+
+            billsToAdd.push(
+              billsCollection.add({
+                ...bill,
+                dueDate: new Date(indexOcurrence.getFullYear(), indexOcurrence.getMonth(), billDateDay).getTime(),
+              })
+            );
+          }
+
+          const addedBills = await Promise.all(billsToAdd);
+
+          await billsRecurrenceCollection.add({
+            type: values.recurrenceType,
+            ends_in: values.recurrenceDueDate,
+            bills: addedBills.map(({ id }) => `bills/${id}`),
+          });
+
+          return toast({
+            description: 'Conta e recorrência criados com sucesso!',
+            status: 'success',
+          });
+        }
+
         await billsCollection.add(bill);
       }
       toast({
@@ -94,7 +153,7 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
 
       router.push('/');
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -128,6 +187,7 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
   }, [foundBill, setValue]);
 
   const billType = watch('type', false);
+  const billRecurrence = watch('recurrence', false);
 
   const title = useMemo(() => {
     const prefix = billId ? 'Editar' : 'Criar nova';
@@ -141,6 +201,9 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
 
     return `${prefix} conta`;
   }, [billId, router.query.type]);
+
+  console.log(errors);
+
   return (
     <Box
       title={title}
@@ -155,9 +218,9 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
           <Input
             name="name"
             label="Título"
-            {...register('name', { required: true })}
+            {...register('name', { ...defaultRequiredMessage })}
             error={errors.name?.message}
-            marginBottom="10px"
+            mb={5}
           />
 
           <Input
@@ -165,12 +228,13 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
             label="Descrição"
             {...register('description')}
             error={errors.description?.message}
-            marginBottom="10px"
+            mb={5}
           />
 
           <Controller
             control={control}
             name="dueDate"
+            rules={{ ...defaultRequiredMessage }}
             render={({ field }) => (
               <DatePicker
                 name="dueDate"
@@ -179,6 +243,7 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
                 selected={field.value}
                 defaultValue={new Date().getTime()}
                 style={{ marginBottom: '10px' }}
+                error={errors.dueDate?.message}
               />
             )}
           />
@@ -187,37 +252,70 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
             <Select
               name="type"
               label="Tipo"
-              options={types}
-              {...register('type')}
+              options={categoriesExpense}
+              {...register('type', { ...defaultRequiredMessage })}
               error={errors.type?.message}
-              marginBottom="10px"
+              mb={5}
             />
           </If>
 
           <MoneyInput
             name="value"
             label="Valor"
-            {...register('value')}
+            {...register('value', { ...defaultRequiredMessage })}
             error={errors.value?.message}
-            marginBottom="10px"
+            mb={5}
+            isRequired
           />
 
-          <If condition={billType === BillTypes.EXPENSE}>
-            <>
-              <Text fontWeight="500" fontSize="1rem" mb="0.75rem">
-                Categoria
-              </Text>
-              <Stack spacing={2} direction="row" wrap="wrap">
-                {categoriesExpense.map(value => {
-                  const radio = getRadioProps({ value });
-                  return (
-                    <RadioCard key={value} {...radio}>
-                      {value}
-                    </RadioCard>
-                  );
-                })}
-              </Stack>
-            </>
+          <Select
+            name="type"
+            label="Categoria"
+            options={categoriesExpense}
+            {...register('category', { ...defaultRequiredMessage })}
+            error={errors.category?.message}
+            mb={5}
+          />
+
+          <Flex>
+            <Text fontWeight="500" fontSize="1rem" mr="0.75rem">
+              Recorrência
+            </Text>
+
+            <Switch name="recurrence" {...register('recurrence')} />
+          </Flex>
+          <Text fontSize="0.5rem" mb={5}>
+            Contas reccorentes serão criadas com a frequência que você determinar.
+          </Text>
+
+          <If condition={!!billRecurrence}>
+            <Box bg="gray.700" p={4} borderRadius={5} width="100%" mb={5}>
+              <Select
+                name="recurrenceType"
+                label="Frequência"
+                options={recurrenceTypes}
+                {...register('recurrenceType')}
+                defaultValue="EVERY_MONTH"
+                error={errors.recurrence_type?.message}
+                mb={5}
+              />
+
+              <Controller
+                control={control}
+                name="recurrenceDueDate"
+                render={({ field }) => (
+                  <DatePicker
+                    name="recurrenceDueDate"
+                    label="Acaba em"
+                    onChange={date => field.onChange(date)}
+                    selected={field.value}
+                    defaultValue={new Date().getTime()}
+                    minDate={new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)}
+                    maxDate={new Date(TO_YEAR, 11, 31)}
+                  />
+                )}
+              />
+            </Box>
           </If>
 
           <Button type="submit" isLoading={isSubmitting}>
