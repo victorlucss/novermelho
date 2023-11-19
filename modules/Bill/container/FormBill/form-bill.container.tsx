@@ -269,14 +269,16 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
             isRequired
           />
 
-          <Select
-            name="type"
-            label="Categoria"
-            options={categoriesExpense}
-            {...register('category', { ...defaultRequiredMessage })}
-            error={errors.category?.message}
-            mb={5}
-          />
+          <If condition={router.query?.type === BillTypes.EXPENSE}>
+            <Select
+              name="type"
+              label="Categoria"
+              options={categoriesExpense}
+              {...register('category', { ...defaultRequiredMessage })}
+              error={errors.category?.message}
+              mb={5}
+            />
+          </If>
 
           <Flex>
             <Text fontWeight="500" fontSize="1rem" mr="0.75rem">
