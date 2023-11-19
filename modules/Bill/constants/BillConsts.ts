@@ -15,4 +15,8 @@ export const MONTHS_DICT = {
 
 export const FROM_YEAR = 2020;
 
-export const TO_YEAR = 2023;
+export const TO_YEAR = 2024;
+
+export const defaultRequiredMessage = {
+  required: 'Este campo é obrigatório!',
+};
