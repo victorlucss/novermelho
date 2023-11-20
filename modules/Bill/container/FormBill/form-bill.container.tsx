@@ -34,29 +34,6 @@ const recurrenceTypes = [
   //  },
 ];
 
-const categoriesExpense = [
-  {
-    label: '💳 Cartão de crédito',
-    value: 'CREDIT_CARD',
-  },
-  {
-    label: '💰 Investimento',
-    value: 'INVESTING',
-  },
-  {
-    label: '💸 Fixo',
-    value: 'FIXED',
-  },
-  {
-    label: '🔁 Flexível',
-    value: 'FLEX',
-  },
-  {
-    label: '💲 Outro',
-    value: 'OTHER',
-  },
-];
-
 interface FormBillProps {
   billId?: string;
 }
@@ -85,10 +62,6 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
       console.error(error);
     }
   }, [router.query.type, setValue]);
-
-  useEffect(() => {
-    setValue('category', categoriesExpense[0].value);
-  }, [setValue]);
 
   const onSubmit = async values => {
     if (!userId) return;
@@ -203,6 +176,56 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
     return `${prefix} conta`;
   }, [billId, router.query.type]);
 
+  const type = useMemo(() => {
+    return router.query.type || watch('type', false);
+  }, [watch, router.query.type]);
+
+  const categories = useMemo(() => {
+    if (type === BillTypes.EXPENSE) {
+      return [
+        {
+          label: '💳 Cartão de crédito',
+          value: 'CREDIT_CARD',
+        },
+        {
+          label: '💰 Investimento',
+          value: 'INVESTING',
+        },
+        {
+          label: '💸 Fixo',
+          value: 'FIXED',
+        },
+        {
+          label: '🔁 Flexível',
+          value: 'FLEX',
+        },
+        {
+          label: '💲 Outro',
+          value: 'OTHER',
+        },
+      ];
+    } else {
+      return [
+        {
+          label: '💰 Salário',
+          value: 'SALARY',
+        },
+        {
+          label: '💸 Veaco',
+          value: 'VEACO',
+        },
+        {
+          label: '💲 Outro',
+          value: 'OTHER',
+        },
+      ];
+    }
+  }, [type]);
+
+  useEffect(() => {
+    setValue('category', categories[0].value);
+  }, [setValue]);
+
   return (
     <Box
       title={title}
@@ -251,7 +274,7 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
             <Select
               name="type"
               label="Tipo"
-              options={categoriesExpense}
+              options={types}
               {...register('type', { ...defaultRequiredMessage })}
               error={errors.type?.message}
               mb={5}
@@ -267,16 +290,14 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
             isRequired
           />
 
-          <If condition={router.query?.type === BillTypes.EXPENSE}>
-            <Select
-              name="type"
-              label="Categoria"
-              options={categoriesExpense}
-              {...register('category', { ...defaultRequiredMessage })}
-              error={errors.category?.message}
-              mb={5}
-            />
-          </If>
+          <Select
+            name="type"
+            label="Categoria"
+            options={categories}
+            {...register('category', { ...defaultRequiredMessage })}
+            error={errors.category?.message}
+            mb={5}
+          />
 
           <Flex>
             <Text fontWeight="500" fontSize="1rem" mr="0.75rem">

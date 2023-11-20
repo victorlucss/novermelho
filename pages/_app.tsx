@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ChakraProvider theme={theme}>
       <UserProvider>
         <Head>
-          <title>ToNoVermelho</title>
+          <title>NoVermelho</title>
         </Head>
         <Component {...pageProps} />
       </UserProvider>
