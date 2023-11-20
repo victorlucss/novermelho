@@ -212,3 +212,24 @@ html {
 .react-datepicker__close-icon::after:hover {
     color: var(--gray)
 }
+
+input[type="color"] {
+    padding: 0;
+}
+
+/* Adicionando um estilo de fundo personalizado para indicar cor atual */
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 5px;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: 0;
+    width: 100%;
+    border-radius: var(--chakra-radii-md);
+}
+
+/* Adicionando uma borda ao focar */
+input[type="color"]:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}

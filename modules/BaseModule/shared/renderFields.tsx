@@ -14,6 +14,7 @@ const renderFields = (fields: BaseField[], errors, register) =>
       register={register}
       options={options}
       value={value}
+      props={{ mb: 5 }}
     />
   ));
 

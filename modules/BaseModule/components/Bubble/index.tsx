@@ -30,11 +30,24 @@ const Bubble = ({
   props = {},
 }: BubbleInterface) => {
   switch (type) {
-    case BUBBLE_TYPES.INPUT:
+    case BUBBLE_TYPES.INPUT_TEXT:
       return (
         <Input
           name={name}
           label={label}
+          {...register(name, { required })}
+          error={errors[name]?.message}
+          value={value}
+          {...props}
+        />
+      );
+
+    case BUBBLE_TYPES.INPUT_COLOR:
+      return (
+        <Input
+          name={name}
+          label={label}
+          type="color"
           {...register(name, { required })}
           error={errors[name]?.message}
           value={value}
@@ -51,6 +64,7 @@ const Bubble = ({
           {...register(name)}
           value={value}
           error={errors[name]?.message}
+          {...props}
         />
       );
 

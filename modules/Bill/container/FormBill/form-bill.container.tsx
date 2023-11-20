@@ -10,6 +10,7 @@ import { BillTypes, BillStatus } from '@Modules/Bill/constants/Types';
 import { Input, MoneyInput, Select, DatePicker, Box, If } from '@Components';
 import { useUser } from '@Modules/Authentication/context/UserContext';
 import { defaultRequiredMessage, TO_YEAR } from '@Modules/Bill/constants/BillConsts';
+import { useCategoriesSelect } from '@Modules/Category/hooks/useCategoriesSelect';
 
 const types = [
   {
@@ -51,6 +52,7 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
   const router = useRouter();
   const toast = useToast();
   const { userId } = useUser();
+  const categoriesSelect = useCategoriesSelect();
 
   const [foundBill, setFoundBill] = useState<Bill | undefined>();
 
@@ -181,59 +183,27 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
   }, [watch, router.query.type]);
 
   const categories = useMemo(() => {
-    if (type === BillTypes.EXPENSE) {
-      return [
-        {
-          label: '💳 Cartão de crédito',
-          value: 'CREDIT_CARD',
-        },
-        {
-          label: '💰 Investimento',
-          value: 'INVESTING',
-        },
-        {
-          label: '💸 Fixo',
-          value: 'FIXED',
-        },
-        {
-          label: '🔁 Flexível',
-          value: 'FLEX',
-        },
-        {
-          label: '💲 Outro',
-          value: 'OTHER',
-        },
-      ];
-    } else {
-      return [
-        {
-          label: '💰 Salário',
-          value: 'SALARY',
-        },
-        {
-          label: '💸 Veaco',
-          value: 'VEACO',
-        },
-        {
-          label: '💲 Outro',
-          value: 'OTHER',
-        },
-      ];
-    }
-  }, [type]);
+    console.log(
+      categoriesSelect,
+      categoriesSelect.filter(category => category.type === type)
+    );
+    return categoriesSelect
+      .filter(category => category.type === type)
+      .map(category => ({
+        label: category.name,
+        value: category.id,
+      }));
+  }, [type, categoriesSelect]);
 
   useEffect(() => {
+    if (!categories[0]) return;
     setValue('category', categories[0].value);
-  }, [setValue]);
+  }, [setValue, categories]);
 
   return (
     <Box
       title={title}
       description={billId ? '' : 'Adicione uma nova despesa agora e mantenha o controle total do seu orçamento!'}
-      margin="10px"
-      padding="10px"
-      borderWidth="1px"
-      borderRadius="lg"
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Flex direction="column" alignItems="flex-start">

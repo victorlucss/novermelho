@@ -1,4 +1,5 @@
 import { auth, firestore, googleProvider } from '@Configs/Firebase';
+import { createDefaultCategories } from '@Modules/Category/helpers/createDefaultCategories';
 
 interface IGoogleProviderProfile {
   email?: string;
@@ -12,16 +13,20 @@ interface IGoogleProviderProfile {
 }
 
 export const signInWithGoogle = () => {
-  return auth.signInWithPopup(googleProvider).then(({ additionalUserInfo, user }) => {
+  return auth.signInWithPopup(googleProvider).then(async ({ additionalUserInfo, user }) => {
     if (additionalUserInfo.isNewUser) {
       const profile = additionalUserInfo.profile as IGoogleProviderProfile;
 
-      firestore.collection('user').add({
-        email: profile?.email,
-        name: `${profile?.given_name} ${profile?.family_name}`,
-        locale: profile?.locale,
-        image: profile?.picture,
-      });
+      await firestore
+        .collection('user')
+        .doc(user.uid)
+        .set({
+          email: profile?.email,
+          name: `${profile?.given_name} ${profile?.family_name}`,
+          locale: profile?.locale,
+          image: profile?.picture,
+        })
+        .then(() => createDefaultCategories(user.uid));
     }
     return user.uid;
   });
