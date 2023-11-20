@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Flex, Spacer, Box } from '@chakra-ui/react';
 
 import { Select } from '@Components/Select';
+import { MONTHS_DICT } from '@Modules/Bill/constants/BillConsts';
 
 type BillFiltersType = {
   year?: number;
@@ -15,21 +16,6 @@ interface BillFiltersProps {
   from: number;
   to: number;
 }
-
-const MONTHS_DICT = {
-  0: 'Janeiro',
-  1: 'Fevereiro',
-  2: 'Março',
-  3: 'Abril',
-  4: 'Maio',
-  5: 'Junho',
-  6: 'Julho',
-  7: 'Agosto',
-  8: 'Setembro',
-  9: 'Outubro',
-  10: 'Novembro',
-  11: 'Dezembro',
-};
 
 const BillFilters = ({ filters, onChange, from, to }: BillFiltersProps) => {
   const {
@@ -77,7 +63,7 @@ const BillFilters = ({ filters, onChange, from, to }: BillFiltersProps) => {
     }
 
     return finalMonths;
-  }, [filters.year]);
+  }, []);
 
   return (
     <Box marginBottom="10px" borderWidth="1px" borderRadius="lg">
@@ -85,7 +71,7 @@ const BillFilters = ({ filters, onChange, from, to }: BillFiltersProps) => {
         <Flex p="2" alignItems="flex-end">
           <Select
             name="year"
-            label="Year"
+            label="Ano"
             value={filters?.year}
             options={years}
             {...register('year')}
@@ -98,7 +84,7 @@ const BillFilters = ({ filters, onChange, from, to }: BillFiltersProps) => {
 
           <Select
             name="month"
-            label="Months"
+            label="Mês"
             value={filters?.month}
             options={months}
             {...register('month')}

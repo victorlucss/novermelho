@@ -15,11 +15,6 @@ interface UserProviderProps {
   children: React.ReactNode;
 }
 
-const formatAuthUser = user => ({
-  uid: user.uid,
-  email: user.email,
-});
-
 export const UserProvider = ({ children }: UserProviderProps) => {
   const [userId, setUserId] = useState(null);
   const [user, setUser] = useState(null);
@@ -31,9 +26,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       return;
     }
 
-    // var formattedUser = formatAuthUser(authState);
     setUserId(authState.uid);
-    // setUser(formatAuthUser);
   };
 
   useEffect(() => {

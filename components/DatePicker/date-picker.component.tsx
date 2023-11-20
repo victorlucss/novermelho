@@ -1,6 +1,8 @@
 import React, { HTMLAttributes } from 'react';
-import { FormControl, FormLabel, FormErrorMessage, useColorMode } from '@chakra-ui/react';
 import ReactDatePicker from 'react-datepicker';
+import { FormControl, FormLabel, FormErrorMessage, useColorMode } from '@chakra-ui/react';
+
+import { useIsMobile } from '@Modules/BaseModule/hooks/useIsMobile';
 
 interface Props {
   isClearable?: boolean;
@@ -11,6 +13,8 @@ interface Props {
   label?: string;
   error?: string;
   value?: string;
+  maxDate?: Date;
+  minDate?: Date;
 }
 
 export const DatePicker = ({
@@ -22,20 +26,27 @@ export const DatePicker = ({
   label,
   error,
   value,
+  maxDate,
+  minDate,
   ...rest
 }: Props & HTMLAttributes<HTMLElement>) => {
   const isLight = useColorMode().colorMode === 'light';
+  const isMobile = useIsMobile();
+
   return (
     <FormControl id={name} isInvalid={!!error} {...rest}>
       {label && <FormLabel>{label}</FormLabel>}
-      <div className={`react-datepicker ${isLight ? 'light-theme' : 'dark-theme'}`}>
+      <div className={`${isLight ? 'light-theme' : 'dark-theme'}`}>
         <ReactDatePicker
           dateFormat="dd/MM/yyyy"
           selected={selected}
           onChange={onChange}
           isClearable={isClearable}
           showPopperArrow={showPopperArrow}
-          // className="react-datapicker__input-text" //input is white by default and there is no already defined class for it so I created a new one
+          maxDate={maxDate}
+          minDate={minDate}
+          className={!!error ? 'hasError' : ''}
+          withPortal={isMobile}
         />
       </div>
       {error && <FormErrorMessage>{error}</FormErrorMessage>}
