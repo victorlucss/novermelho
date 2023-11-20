@@ -9,7 +9,7 @@ type BoxProps = {
 
 export const Box = ({ title, description, children, ...rest }: BoxProps) => {
   return (
-    <ChakraBox {...rest}>
+    <ChakraBox m={3} p={3} borderWidth="1px" borderRadius="lg" {...rest}>
       {(title || description) && (
         <Flex direction="column" mb={5}>
           {title && (

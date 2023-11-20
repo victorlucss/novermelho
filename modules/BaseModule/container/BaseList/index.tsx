@@ -1,5 +1,25 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Box, Table, Thead, Tbody, Tr, Th, Td, Spinner, Button } from '@chakra-ui/react';
+import {
+  Box,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Spinner,
+  Button,
+  Text,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  PopoverArrow,
+  IconButton,
+  Stack,
+} from '@chakra-ui/react';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 
 import { Modal } from '@Components';
 
@@ -11,6 +31,7 @@ const MODAL_TYPES = {
 interface BaseHeader {
   label: string;
   field: string;
+  render?: (item) => React.ReactElement;
 }
 
 interface BaseListInterface<T> {
@@ -36,7 +57,7 @@ const BaseList = <T extends { id?: string | number }>({
   const [id, setId] = useState<number>();
 
   useEffect(() => {
-    if (!modalType) {
+    if (!modalType && !!onCloseOption) {
       onCloseOption();
     }
   }, [modalType]);
@@ -51,14 +72,55 @@ const BaseList = <T extends { id?: string | number }>({
 
     return items.map((item: T, index) => (
       <Tr key={index}>
-        {fields.map(field => {
+        {headers.map(({ field, render }) => {
           if (!item[field]) return;
+          if (!!render) return <Td>{render(item)}</Td>;
           return <Td>{item[field]}</Td>;
         })}
         {optionsEnabled && (
           <Td>
-            <Button onClick={() => handleOpenModalWithId(item.id, MODAL_TYPES.EDIT_MODAL)}>Edit</Button>
-            <Button onClick={() => handleOpenModalWithId(item.id, MODAL_TYPES.DELETE_MODAL)}>Delete</Button>
+            <Popover placement="bottom-end" isLazy>
+              <PopoverTrigger>
+                <IconButton
+                  aria-label="More server options"
+                  icon={<BsThreeDotsVertical />}
+                  variant="outline"
+                  size="sm"
+                  w="fit-content"
+                />
+              </PopoverTrigger>
+              <PopoverContent w="fit-content" _focus={{ boxShadow: 'none' }}>
+                <PopoverArrow />
+                <PopoverBody>
+                  <Stack>
+                    <Button
+                      w="210px"
+                      variant="ghost"
+                      leftIcon={<EditIcon />}
+                      justifyContent="flex-start"
+                      fontWeight="normal"
+                      fontSize="sm"
+                      onClick={() => handleOpenModalWithId(item.id, MODAL_TYPES.EDIT_MODAL)}
+                    >
+                      Editar categoria
+                    </Button>
+
+                    <Button
+                      w="210px"
+                      variant="ghost"
+                      leftIcon={<DeleteIcon />}
+                      justifyContent="flex-start"
+                      fontWeight="normal"
+                      colorScheme="red"
+                      fontSize="sm"
+                      onClick={() => handleOpenModalWithId(item.id, MODAL_TYPES.DELETE_MODAL)}
+                    >
+                      Deletar categoria
+                    </Button>
+                  </Stack>
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
           </Td>
         )}
       </Tr>
@@ -70,9 +132,10 @@ const BaseList = <T extends { id?: string | number }>({
       case MODAL_TYPES.DELETE_MODAL:
         return (
           <>
-            <h1>Are you sure about this action?</h1>
-            <Button onClick={() => onDeleteItem(id)}>Yes, I'm</Button>
-            <Button onClick={() => setModalType(null)}>Cancel</Button>
+            <Text fontSize="lg" fontWeight="bold" color="white" mb={5} mt={3}>
+              Deletar categoria
+            </Text>
+            Você tem certeza que deseja apagar esta categoria?
           </>
         );
 
@@ -84,9 +147,27 @@ const BaseList = <T extends { id?: string | number }>({
     }
   }, [editComponent, id, modalType]);
 
+  const modalFooter = useMemo(() => {
+    switch (modalType) {
+      case MODAL_TYPES.DELETE_MODAL:
+        return (
+          <>
+            <Button onClick={() => setModalType(null)}>Cancelar</Button>
+            <Button colorScheme="red" ml={3} onClick={() => onDeleteItem(id)}>
+              Deletar
+            </Button>
+          </>
+        );
+    }
+  }, [editComponent, id, modalType]);
+
   return (
     <>
-      <Modal isOpen={Object.keys(MODAL_TYPES).includes(modalType)} onClose={() => setModalType(null)}>
+      <Modal
+        isOpen={Object.keys(MODAL_TYPES).includes(modalType)}
+        onClose={() => setModalType(null)}
+        footer={modalFooter}
+      >
         {modalContent}
       </Modal>
       <Box margin="10px" padding="10px" borderWidth="1px" borderRadius="lg">
@@ -96,7 +177,7 @@ const BaseList = <T extends { id?: string | number }>({
               {headers.map(({ label }) => (
                 <Th key={label}>{label}</Th>
               ))}
-              {optionsEnabled && <Th>Options</Th>}
+              {optionsEnabled && <Th></Th>}
             </Tr>
           </Thead>
           <Tbody>

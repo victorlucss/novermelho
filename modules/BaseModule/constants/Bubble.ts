@@ -1,5 +1,6 @@
 export const BUBBLE_TYPES = {
-  INPUT: 'INPUT',
+  INPUT_TEXT: 'INPUT_TEXT',
+  INPUT_COLOR: 'INPUT_COLOR',
   SELECT: 'SELECT',
 };
 
