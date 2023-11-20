@@ -7,6 +7,8 @@ export const useCategoriesSelect = () => {
   const [categories, setCategories] = useState([]);
   const { userId } = useUser();
   const fetchUserCategories = useCallback(async () => {
+    if (!userId) return;
+
     const data = await firestore.collection('categories').where('userId', '==', userId).get();
     setCategories(
       data.docs.map(category => ({

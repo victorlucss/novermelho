@@ -22,11 +22,6 @@ const expenseCategories = [
     color: '#000000',
     type: BillTypes.EXPENSE,
   },
-  {
-    name: '💲 Outro',
-    color: '#000000',
-    type: BillTypes.EXPENSE,
-  },
 ];
 
 const incomeCategories = [
@@ -48,6 +43,8 @@ const incomeCategories = [
 ];
 
 export const createDefaultCategories = async userId => {
+  if (!userId) return;
+
   const defaultCategories = [...expenseCategories, ...incomeCategories];
   let createBatchCategories = [];
 
