@@ -6,6 +6,7 @@ import { FormCategory } from '@Modules/Category/components/form-category.compone
 import BaseList from '@Modules/BaseModule/container/BaseList';
 import { firestore } from '@Configs/Firebase';
 import { BillTypes } from '@Modules/Bill/constants/Types';
+import { useUser } from "@Authentication/context/UserContext";
 
 interface ICategory {
   id?: string;
@@ -20,13 +21,14 @@ const billTypesText = {
 export const ListCategoriesContainer = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { userId } = useUser();
 
   const fetchData = useCallback(async () => {
-    firestore.collection('categories').onSnapshot(({ docs }) => {
+    firestore.collection('categories').where('userId', '==', userId).onSnapshot(({ docs }) => {
       setLoading(true);
       setItems(docs.map(category => ({ id: category.id, ...category.data() } as ICategory)));
     });
-  }, []);
+    }, [userId]);
 
   useEffect(() => {
     fetchData();
