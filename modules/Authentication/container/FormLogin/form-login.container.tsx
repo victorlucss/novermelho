@@ -4,28 +4,27 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 
-import AuthenticationService from '@Authentication/services/AuthenticationService';
+import { signInWithGoogle } from '@Authentication/services/authentication.service';
 import { useUser } from '@Modules/Authentication/context/UserContext';
 
-const FormLogin = () => {
+export const FormLoginContainer = () => {
   const toast = useToast();
-  const Router = useRouter();
+  const router = useRouter();
   const { userId, setUserId } = useUser();
 
   useEffect(() => {
     if (userId) {
-      Router.replace('/');
+      router.push('/');
     }
-  }, [Router, userId]);
+  }, [router, userId]);
 
-  const onLoginWithGoogle = async values => {
+  const onLoginWithGoogle = async () => {
     try {
-      const res = await AuthenticationService.signInWithGoogle();
+      const uid = await signInWithGoogle();
 
-      const { uid } = res.user;
       if (uid) {
         setUserId(uid);
-        Router.replace('/');
+        router.push('/');
       }
     } catch (err) {
       toast({
@@ -52,5 +51,3 @@ const FormLogin = () => {
     </AbsoluteCenter>
   );
 };
-
-export default FormLogin;

@@ -2,6 +2,8 @@ import React, { HTMLAttributes } from 'react';
 import ReactDatePicker from 'react-datepicker';
 import { FormControl, FormLabel, FormErrorMessage, useColorMode } from '@chakra-ui/react';
 
+import { useIsMobile } from '@Modules/BaseModule/hooks/useIsMobile';
+
 interface Props {
   isClearable?: boolean;
   onChange: (date: Date) => any;
@@ -29,6 +31,8 @@ export const DatePicker = ({
   ...rest
 }: Props & HTMLAttributes<HTMLElement>) => {
   const isLight = useColorMode().colorMode === 'light';
+  const isMobile = useIsMobile();
+
   return (
     <FormControl id={name} isInvalid={!!error} {...rest}>
       {label && <FormLabel>{label}</FormLabel>}
@@ -42,6 +46,7 @@ export const DatePicker = ({
           maxDate={maxDate}
           minDate={minDate}
           className={!!error ? 'hasError' : ''}
+          withPortal={isMobile}
         />
       </div>
       {error && <FormErrorMessage>{error}</FormErrorMessage>}
