@@ -51,20 +51,20 @@ const Bubble = ({
           {...register(name, { required })}
           error={errors[name]?.message}
           value={value}
-
-        {...props}/>
+          {...props}
+        />
       );
 
-      case BUBBLE_TYPES.MONEY:
-        return (
-          <MoneyInput
-            name={name}
-            label={label}
-            {...register(name, { required })}
-            error={errors[name]?.message}
-            {...props}
-          />
-          );
+    case BUBBLE_TYPES.MONEY:
+      return (
+        <MoneyInput
+          name={name}
+          label={label}
+          {...register(name, { required })}
+          error={errors[name]?.message}
+          {...props}
+        />
+      );
 
     case BUBBLE_TYPES.SELECT:
       return (

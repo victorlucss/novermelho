@@ -20,7 +20,7 @@ import { FiHome, FiPower, FiTrendingUp, FiTrendingDown, FiMenu } from 'react-ico
 import { IconType } from 'react-icons';
 import Image from 'next/image';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
-import { TbPigMoney } from "react-icons/tb";
+import { TbPigMoney } from 'react-icons/tb';
 
 interface LinkItemProps {
   name: string;
