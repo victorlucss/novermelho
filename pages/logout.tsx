@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { Center } from '@chakra-ui/react';
 
 import { auth } from '@Configs/Firebase';
 
@@ -9,7 +10,7 @@ export default function Logout() {
   useEffect(() => {
     auth.signOut();
     router.push('/');
-  }, []);
+  }, [router]);
 
-  return <>Loading</>;
+  return <Center>Loading</Center>;
 }

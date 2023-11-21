@@ -10,7 +10,7 @@ import { BillTypes, BillStatus } from '@Modules/Bill/constants/Types';
 import { Input, MoneyInput, Select, DatePicker, Box, If } from '@Components';
 import { useUser } from '@Modules/Authentication/context/UserContext';
 import { defaultRequiredMessage, TO_YEAR } from '@Modules/Bill/constants/BillConsts';
-import { useCategoriesSelect } from '@Modules/Category/hooks/useCategoriesSelect';
+import { useCategories } from '@Modules/Category/hooks/useCategories';
 
 const types = [
   {
@@ -52,7 +52,7 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
   const router = useRouter();
   const toast = useToast();
   const { userId } = useUser();
-  const categoriesSelect = useCategoriesSelect();
+  const categoriesSelect = useCategories();
 
   const [foundBill, setFoundBill] = useState<Bill | undefined>();
 
@@ -183,16 +183,14 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
   }, [watch, router.query.type]);
 
   const categories = useMemo(() => {
-    console.log(
-      categoriesSelect,
-      categoriesSelect.filter(category => category.type === type)
+    return (
+      categoriesSelect
+        ?.filter(category => category.type === type)
+        ?.map(category => ({
+          label: category.name,
+          value: category.id,
+        })) || []
     );
-    return categoriesSelect
-      .filter(category => category.type === type)
-      .map(category => ({
-        label: category.name,
-        value: category.id,
-      }));
   }, [type, categoriesSelect]);
 
   useEffect(() => {
