@@ -6,7 +6,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 
 import BaseField from '@Modules/BaseModule/interfaces/BaseField';
-import renderFields from '@Modules/BaseModule/shared/renderFields';
 import Bubble from '@Modules/BaseModule/components/Bubble';
 
 interface BaseFormInterface<T> {
