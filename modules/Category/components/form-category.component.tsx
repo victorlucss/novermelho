@@ -10,7 +10,7 @@ import { BillTypes } from '@Modules/Bill/constants/Types';
 import { useUser } from '@Authentication/context/UserContext';
 
 interface FormCategoryProps {
-  id?: string | number;
+  id?: string;
 }
 interface ICategory {
   id?: string;

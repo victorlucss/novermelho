@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 
 import BaseForm from '@Modules/BaseModule/container/BaseForm';
 import { BUBBLE_TYPES, BubbleEnum } from '@Modules/BaseModule/constants/Bubble';
-import { firestore } from '@Configs/Firebase';
 import { BillTypes } from '@Modules/Bill/constants/Types';
 import { useUser } from '@Authentication/context/UserContext';
 import { useCategories } from '@Modules/Category/hooks/useCategories';
@@ -14,16 +13,11 @@ import {
   getOneBudget,
   updateBudget,
   verifyExistsBudgetCategory,
+  IBudget,
 } from '@Modules/Budget/services/budget.service';
 
 interface FormBudgetProps {
-  id?: string | number;
-}
-
-interface ICategory {
   id?: string;
-  name: string;
-  color: string;
 }
 
 const schema = object().shape({
@@ -62,14 +56,17 @@ export const FormBudget = ({ id }: FormBudgetProps) => {
     }
   }, [categories]);
 
-  const fetch = useCallback(async () => {
-    return getOneBudget(id);
-  }, [id]);
+  const fetch = useCallback(
+    async id => {
+      return getOneBudget(id);
+    },
+    [id]
+  );
 
-  const onSubmit = async values => {
+  const onSubmit = async (values: IBudget) => {
     try {
       if (id) {
-        await updateBudget(id, {
+        return updateBudget(id, {
           userId,
           ...values,
         });
@@ -106,7 +103,7 @@ export const FormBudget = ({ id }: FormBudgetProps) => {
         {id ? 'Editar' : 'Criar'} orçamento
       </Text>
 
-      <BaseForm<ICategory>
+      <BaseForm<IBudget>
         id={id}
         fields={fields}
         fetch={fetch}

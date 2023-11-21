@@ -39,12 +39,12 @@ interface BaseListInterface<T> {
   items: T[];
   isLoading: boolean;
   optionsEnabled?: boolean;
-  onDeleteItem?: (id: string | number) => void;
+  onDeleteItem?: (id: string) => void;
   onCloseOption?: () => void;
-  editComponent?: (id: string | number) => React.ReactElement;
+  editComponent?: (id: string) => React.ReactElement;
 }
 
-const BaseList = <T extends { id?: string | number }>({
+const BaseList = <T extends { id?: string }>({
   headers,
   items,
   isLoading,
@@ -54,7 +54,7 @@ const BaseList = <T extends { id?: string | number }>({
   onDeleteItem,
 }: BaseListInterface<T>) => {
   const [modalType, setModalType] = useState(null);
-  const [id, setId] = useState<number>();
+  const [id, setId] = useState<string>();
 
   useEffect(() => {
     if (!modalType && !!onCloseOption) {

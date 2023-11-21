@@ -9,10 +9,10 @@ import BaseField from '@Modules/BaseModule/interfaces/BaseField';
 import Bubble from '@Modules/BaseModule/components/Bubble';
 
 interface BaseFormInterface<T> {
-  id?: string | number;
-  fetch?: (id: string | number) => Promise<T>;
+  id?: string;
+  fetch?: (id: string) => Promise<T>;
   fields: BaseField[];
-  onSubmit: (element: T) => T | Promise<T> | Promise<void>;
+  onSubmit: (element: T) => Promise<any>;
   submitLabel?: string;
   schema: Yup.AnyObjectSchema;
 }

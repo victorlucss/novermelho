@@ -18,7 +18,7 @@ export const getOneBudget = id => {
   return budgetsCollection
     .doc(id)
     .get()
-    .then(res => res.data());
+    .then(res => res.data() as IBudget);
 };
 
 export const updateBudget = (id: string, budget: IBudget) => {
