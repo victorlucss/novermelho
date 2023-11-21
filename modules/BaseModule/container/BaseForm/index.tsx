@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '@chakra-ui/button';
 import { Flex } from '@chakra-ui/react';
@@ -7,6 +7,7 @@ import * as Yup from 'yup';
 
 import BaseField from '@Modules/BaseModule/interfaces/BaseField';
 import renderFields from '@Modules/BaseModule/shared/renderFields';
+import Bubble from '@Modules/BaseModule/components/Bubble';
 
 interface BaseFormInterface<T> {
   id?: string | number;
@@ -65,10 +66,26 @@ const BaseForm = <T extends {}>({
     }
   }, [fetchData, id]);
 
+  const renderFields = useMemo(() => {
+    return fields.map(({ name, type, label, options, value }) => (
+      <Bubble
+        key={name}
+        name={name}
+        label={label}
+        type={type}
+        errors={errors}
+        register={register}
+        options={options}
+        value={value}
+        props={{ mb: 5 }}
+      />
+    ));
+  }, [fields]);
+
   return (
     <form onSubmit={handleSubmit(wrapperOnSubmit)}>
       <Flex direction="column" alignItems="flex-start">
-        {renderFields(fields, errors, register)}
+        {renderFields}
 
         <Button type="submit" isLoading={isSubmitting}>
           {submitLabel}

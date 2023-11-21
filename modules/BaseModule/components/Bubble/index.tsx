@@ -1,7 +1,7 @@
 import React from 'react';
 import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
 
-import { Input, Select } from '@Components';
+import { Input, Select, MoneyInput } from '@Components';
 import SelectOption from '@Modules/BaseModule/interfaces/SelectOption';
 
 import { BubbleEnum, BUBBLE_TYPES } from '../../constants/Bubble';
@@ -51,9 +51,20 @@ const Bubble = ({
           {...register(name, { required })}
           error={errors[name]?.message}
           value={value}
-          {...props}
-        />
+
+        {...props}/>
       );
+
+      case BUBBLE_TYPES.MONEY:
+        return (
+          <MoneyInput
+            name={name}
+            label={label}
+            {...register(name, { required })}
+            error={errors[name]?.message}
+            {...props}
+          />
+          );
 
     case BUBBLE_TYPES.SELECT:
       return (

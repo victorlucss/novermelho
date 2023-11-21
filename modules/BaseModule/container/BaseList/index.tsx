@@ -67,6 +67,10 @@ const BaseList = <T extends { id?: string | number }>({
     setModalType(type);
   };
 
+  const wrapperOnDelete = cb => {
+    setModalType(null);
+  };
+
   const tableItems = useMemo(() => {
     const fields = headers.map(({ field }) => field);
 
@@ -102,7 +106,7 @@ const BaseList = <T extends { id?: string | number }>({
                       fontSize="sm"
                       onClick={() => handleOpenModalWithId(item.id, MODAL_TYPES.EDIT_MODAL)}
                     >
-                      Editar categoria
+                      Editar item
                     </Button>
 
                     <Button
@@ -115,7 +119,7 @@ const BaseList = <T extends { id?: string | number }>({
                       fontSize="sm"
                       onClick={() => handleOpenModalWithId(item.id, MODAL_TYPES.DELETE_MODAL)}
                     >
-                      Deletar categoria
+                      Deletar item
                     </Button>
                   </Stack>
                 </PopoverBody>
@@ -133,9 +137,9 @@ const BaseList = <T extends { id?: string | number }>({
         return (
           <>
             <Text fontSize="lg" fontWeight="bold" color="white" mb={5} mt={3}>
-              Deletar categoria
+              Deletar item
             </Text>
-            Você tem certeza que deseja apagar esta categoria?
+            Você tem certeza que deseja apagar este item?
           </>
         );
 
@@ -153,7 +157,7 @@ const BaseList = <T extends { id?: string | number }>({
         return (
           <>
             <Button onClick={() => setModalType(null)}>Cancelar</Button>
-            <Button colorScheme="red" ml={3} onClick={() => onDeleteItem(id)}>
+            <Button colorScheme="red" ml={3} onClick={() => wrapperOnDelete(onDeleteItem(id))}>
               Deletar
             </Button>
           </>
@@ -170,24 +174,22 @@ const BaseList = <T extends { id?: string | number }>({
       >
         {modalContent}
       </Modal>
-      <Box margin="10px" padding="10px" borderWidth="1px" borderRadius="lg">
-        <Table variant="simple">
-          <Thead>
-            <Tr>
-              {headers.map(({ label }) => (
-                <Th key={label}>{label}</Th>
-              ))}
-              {optionsEnabled && <Th></Th>}
-            </Tr>
-          </Thead>
-          <Tbody>
-            <>
-              {isLoading && <Spinner />}
-              {!isLoading && tableItems}
-            </>
-          </Tbody>
-        </Table>
-      </Box>
+      <Table variant="simple">
+        <Thead>
+          <Tr>
+            {headers.map(({ label }) => (
+              <Th key={label}>{label}</Th>
+            ))}
+            {optionsEnabled && <Th></Th>}
+          </Tr>
+        </Thead>
+        <Tbody>
+          <>
+            {isLoading && <Spinner />}
+            {!isLoading && tableItems}
+          </>
+        </Tbody>
+      </Table>
     </>
   );
 };

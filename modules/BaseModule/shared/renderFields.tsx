@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Bubble from '../components/Bubble';
+
 import BaseField from '../interfaces/BaseField';
 
 const renderFields = (fields: BaseField[], errors, register) =>
