@@ -10,7 +10,7 @@ import { BillTypes, BillStatus } from '@Modules/Bill/constants/Types';
 import { Input, MoneyInput, Select, DatePicker, Box, If } from '@Components';
 import { useUser } from '@Modules/Authentication/context/UserContext';
 import { defaultRequiredMessage, TO_YEAR } from '@Modules/Bill/constants/BillConsts';
-import { useCategories } from '@Modules/Category/hooks/useCategories';
+import { useCategories } from '@/hooks/useCategories';
 
 const types = [
   {

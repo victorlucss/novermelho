@@ -7,7 +7,7 @@ import BaseForm from '@Modules/BaseModule/container/BaseForm';
 import { BUBBLE_TYPES, BubbleEnum } from '@Modules/BaseModule/constants/Bubble';
 import { BillTypes } from '@Modules/Bill/constants/Types';
 import { useUser } from '@Authentication/context/UserContext';
-import { useCategories } from '@Modules/Category/hooks/useCategories';
+import { useCategories } from '@/hooks/useCategories';
 import {
   createBudget,
   getOneBudget,
