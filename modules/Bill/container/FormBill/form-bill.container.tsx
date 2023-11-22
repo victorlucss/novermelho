@@ -28,11 +28,6 @@ const recurrenceTypes = [
     label: 'Cada mês',
     value: 'EVERY_MONTH',
   },
-  // TODO: every year recurrence
-  //  {
-  //    label: 'Cada ano',
-  //    value: 'EVERY_YEAR',
-  //  },
 ];
 
 interface FormBillProps {
@@ -129,7 +124,10 @@ export const FormBillContainer = ({ billId }: FormBillProps) => {
 
       router.push('/');
     } catch (error) {
-      console.error(error);
+      toast({
+        description: error.message,
+        status: 'error',
+      });
     }
   };
 
