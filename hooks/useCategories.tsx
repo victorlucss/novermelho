@@ -14,7 +14,7 @@ interface UseCategoriesOptions {
   type?: string;
 }
 export const useCategories = (options?: UseCategoriesOptions) => {
-  const [categories, setCategories] = useState(null);
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const { userId } = useUser();
   const fetchUserCategories = useCallback(async () => {
     if (!userId) return;

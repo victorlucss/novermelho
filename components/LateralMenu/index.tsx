@@ -20,7 +20,7 @@ import { FiHome, FiPower, FiTrendingUp, FiTrendingDown, FiMenu } from 'react-ico
 import { IconType } from 'react-icons';
 import Image from 'next/image';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
-import { TbPigMoney } from 'react-icons/tb';
+import { TbBrandGoogleAnalytics, TbPigMoney } from 'react-icons/tb';
 
 interface LinkItemProps {
   name: string;
@@ -29,6 +29,7 @@ interface LinkItemProps {
 }
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Início', icon: FiHome, link: '/' },
+  { name: 'Análises', icon: TbBrandGoogleAnalytics, link: '/analytics' },
   { name: 'Criar receita', icon: FiTrendingUp, link: '/bill?type=INCOME' },
   { name: 'Criar despesa', icon: FiTrendingDown, link: '/bill?type=EXPENSE' },
   { name: 'Orçamentos', icon: TbPigMoney, link: '/budget' },

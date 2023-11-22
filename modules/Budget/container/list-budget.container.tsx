@@ -7,7 +7,7 @@ import BaseList from '@Modules/BaseModule/container/BaseList';
 import { BillTypes } from '@Modules/Bill/constants/Types';
 import { useUser } from '@Authentication/context/UserContext';
 import { deleteBudget, getAllBudgets, IBudget } from '@Modules/Budget/services/budget.service';
-import { useCategories } from '@Modules/Category/hooks/useCategories';
+import { useCategories } from '@/hooks/useCategories';
 import { FormBudget } from '@Modules/Budget/components/form-budget.component';
 
 export const ListBudgetContainer = () => {
