@@ -20,7 +20,7 @@ export const StatsMonth = ({ income, expense, balance, isLoaded }: StateMonthPro
             <Skeleton width="100px" height="20px" isLoaded={isLoaded}>
               <StatLabel color="green.500">Receita</StatLabel>
             </Skeleton>
-            <Skeleton width="120px" height="30px" isLoaded={isLoaded} mt={1}>
+            <Skeleton width="100%" height="30px" isLoaded={isLoaded} mt={1}>
               <StatNumber color="green.500">{formatValue(income)}</StatNumber>
             </Skeleton>
           </Stat>
@@ -33,7 +33,7 @@ export const StatsMonth = ({ income, expense, balance, isLoaded }: StateMonthPro
             <Skeleton width="100px" height="20px" isLoaded={isLoaded}>
               <StatLabel color="red.500">Despesas</StatLabel>
             </Skeleton>
-            <Skeleton width="120px" height="30px" isLoaded={isLoaded} mt={1}>
+            <Skeleton width="100%" height="30px" isLoaded={isLoaded} mt={1}>
               <StatNumber color="red.500">{formatValue(expense)}</StatNumber>
             </Skeleton>
           </Stat>
@@ -46,7 +46,7 @@ export const StatsMonth = ({ income, expense, balance, isLoaded }: StateMonthPro
             <Skeleton width="100px" height="20px" isLoaded={isLoaded}>
               <StatLabel color="blue.500">Restante</StatLabel>
             </Skeleton>
-            <Skeleton width="120px" height="30px" isLoaded={isLoaded} mt={1}>
+            <Skeleton width="100%" height="30px" isLoaded={isLoaded} mt={1}>
               <StatNumber color="blue.500">{formatValue(balance)}</StatNumber>
             </Skeleton>
           </Stat>
